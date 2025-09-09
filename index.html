@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cardápio Digital - Sabores autênticos do Nordeste. Pastéis, frutos do mar, carnes e muito mais!">
+    <meta name="keywords" content="cardápio, restaurante, nordeste, pastéis, frutos do mar, delivery">
+    <meta name="author" content="Cardápio Digital">
+    <meta name="theme-color" content="#dc2626">
+    <title>Cardápio Digital - Sabores Autênticos do Nordeste</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script:wght@700&display=swap"></noscript>
+    
+    <!-- DNS prefetch for external domains -->
+    <link rel="dns-prefetch" href="//blogger.googleusercontent.com">
+    <link rel="dns-prefetch" href="//wa.me">
+    
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <style>
+        :root {
+            --primary-red: #dc2626;
+            --primary-orange: #ea580c;
+            --primary-green: #16a34a;
+            --whatsapp-green: #25d366;
+            --whatsapp-dark: #128c7e;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+            line-height: 1.6;
+        }
+        
+        .dish-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            contain: layout style paint;
+        }
+        
+        .dish-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            backdrop-filter: blur(10px);
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(135deg, var(--whatsapp-green), var(--whatsapp-dark));
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+        }
+        
+        .lazy-load {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: #f3f4f6;
+        }
+        
+        .lazy-load.loaded {
+            opacity: 1;
+        }
+        
+        .nav-btn {
+            min-width: 160px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+        
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            transition: color 0.2s ease;
+            user-select: none;
+        }
+        
+        .close:hover {
+            color: #ff6b6b;
+        }
+        
+        .banner-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+        
+        .banner-slide.active {
+            opacity: 1;
+        }
+        
+        .banner-indicator.active {
+            opacity: 1 !important;
+            background-color: var(--primary-red);
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .dish-card:hover {
+                transform: none;
+            }
+            .whatsapp-btn:hover {
+                transform: none;
+            }
+            .nav-btn {
+                min-width: 140px;
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+            .close {
+                top: 10px;
+                right: 20px;
+                font-size: 30px;
+            }
+        }
+        
+        /* Performance optimizations */
+        .grid {
+            contain: layout;
+        }
+        
+        img {
+            content-visibility: auto;
+        }
+        
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-red-50 to-red-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-red-600 to-red-700 text-white py-8 shadow-lg">
+        <div class="container mx-auto px-4 text-center relative">
+            <div class="mb-2">
+                <h1 class="text-6xl font-bold" style="font-family: 'Dancing Script', cursive;">Cardápio Digital</h1>
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOER0Qj5X0ZPSvOKC5QwoFjBq9ExYqQunehSOqlfrNj4YHfB16gdNQ75oGl6pI7kjGuhPiAtlIPn1_YEZ2dCcII5FC4MDtqwH0sy7VCaPZih97M2QH3zXbmKnnPNCBNh91FXAWLVMoss87HilfDTKIjb7TysDwL9uV4eZKZCQaFChH11LHjSqb9lLnsFGt/s1080/Design%20sem%20nome.png" alt="Logo" class="absolute right-4 top-1/2 transform -translate-y-1/2 h-48 w-48 object-contain" onerror="this.style.display='none';">
+            </div>
+            <p class="text-lg opacity-90 italic" style="font-family: 'Catamaran', sans-serif;">Comida gostosa do jeitin do abraço de vó</p>
+        </div>
+    </header>
+
+
+
+    <!-- Banner Section -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-8 relative overflow-hidden rounded-2xl shadow-lg">
+            <div id="bannerSlider" class="relative w-full h-64 md:h-80 lg:h-96">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjhmE0OTRK7lb66CSxjkcb1Luwlhs6YJMpuGvWRFRx-h3WDa9l6k1yuHOIiOjcRxw5ciAdTrVR-84RBHLqMCOCAeNIS8SixwgmtOk8vH457UsVV_2BXvJUTXPmSEECgMrZLAhzh8fvIF2UR7tFaudvoLrktx1pbctMa_2V-lBi7pJxQR8qQMgPX5iMqN6rX" alt="Banner promocional 1" class="banner-slide active w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high" onerror="this.style.display='none';">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhPCL7QukDvNlp-1J25iyuUKLbYMYWST-dXOebXLUjyFpcT5zaPyLQ9XWONx1WMSUAcCGNQKEG-i_lz2n2Y6_jb5cExiN3KggrFAYq3YdX8bswynugvSg2iJyoOJd06KWrvbsdypfTpppDw7hpkZJJvL5WQeHQttTspc9iwPq3si4jFJcyXw7CZYObGUF5W" alt="Banner promocional 2" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiuXw7DOBRnACdkMEihATXmociQtUI6CDSGy6jQDLOjRKwAUC5rT9--hJE-of1Mz3MbZnGp0RERMa1yEoczxVz_yCC-usibs1bR36FJvlKNRdRt9QRTESUWBspC58XpPW2ySzkeAdiNHoPcBwuYnF-ksmMtG5JdlCTT_aQ-6_EDomFga9TunV0JORa-Y0jB" alt="Banner promocional 3" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgZiW16dFhCdAgNgl1E4AdKnkFQISv6sOZ4V3TD0Xgk-4_Q5kKx1ToXYFB55mGGazelsC16yDtIh3xIq7mpJvrDUuIu-qpWjndH8hXAj3TBoMpMjpuOBRLYboobkKeye_5XtHDo99JWADBKW0mjNcJ5YJyLCHRzhEEJ4rucEBSsFP8uH3HKsB3ixKqrt9t6" alt="Banner promocional 4" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhND6BswTyW2Vc4RAD_MSuxCMbf8pXuST3INczNBlrqdz1OOz03d7HA-cMit-voHXZ1cVi27xctdddicbfOzo6VhGIzYMYT43pQ68CQYvJR9PbrOiRzASQ-B-H01yqvC8F29c7nroQElNR48j9wN6KPgWLNPW88r70CnAuHxcd73TRqyYXx3-vey8yolKTh" alt="Banner promocional 5" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
+                
+                <!-- Indicadores -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                    <button class="banner-indicator active w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(0)"></button>
+                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(1)"></button>
+                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(2)"></button>
+                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(3)"></button>
+                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(4)"></button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="flex flex-wrap justify-start gap-4 mb-8">
+            <button onclick="scrollToSection('entradas')" class="nav-btn bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                <span>Entradas</span>
+            </button>
+            <button onclick="scrollToSection('pratos-principais')" class="nav-btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                <span>Pratos Principais</span>
+            </button>
+            <button onclick="scrollToSection('executivos')" class="nav-btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                <span>Pratos Executivos</span>
+            </button>
+            <button onclick="scrollToSection('sobremesas')" class="nav-btn bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
+                <span>Sobremesas</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para visualizar imagens -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage" alt="Imagem ampliada">
+    </div>
+
+    <!-- Menu Container -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Entradas Section -->
+        <div id="entradas" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-left border-b-4 border-red-500 pb-4" style="font-family: 'Mediapro', sans-serif;">
+                Entradas
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="entradasGrid">
+                <!-- Entradas will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Pratos Principais Section -->
+        <div id="pratos-principais" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-left border-b-4 border-red-500 pb-4" style="font-family: 'Mediapro', sans-serif;">
+                Pratos Principais
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="pratosGrid">
+                <!-- Pratos principais will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Pratos Executivos Section -->
+        <div id="executivos" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-left border-b-4 border-red-500 pb-4" style="font-family: 'Mediapro', sans-serif;">
+                Pratos Executivos
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="executivosGrid">
+                <!-- Pratos executivos will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Sobremesas Section -->
+        <div id="sobremesas" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-left border-b-4 border-pink-500 pb-4" style="font-family: 'Mediapro', sans-serif;">
+                Sobremesas
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sobremesasGrid">
+                <!-- Sobremesas will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let menuItems = [
+            {
+                name: "Pastéis Sortidos",
+                price: "29,90",
+                description: "Carne, Pepperoni, Costela, Carne de Sol",
+                image: "🥟",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjaHl9C5mYm6HQMwgaslN8z7pek1E5I43OEkSb-7i_Jz92_8RmYFM9U9YCi4zxPyHW4VY-JCDW9m-7gEPdU30lJJEv5bkT-GLAfM2kJyZX6xavtYd6XsXpChiany2F5GP38K5-7z8CkYJwVPch6C4Tk5bUhcvp_mhY3yOfIPBRudVQ7FUo7J9scY8dz_JM5/s6240/IMG_0468.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Pastéis de Camarão",
+                price: "34,90",
+                description: "Pastéis com creme cheese, creme de camarão servido com molho de ervas.",
+                image: "🦐",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHIcIycf3R3LuY-iN4fMAGq-fYhqWzQqNY1pfqwMeEPz9ktQ81a8lrcDwsQPuxq2HuGJOja4hrPXh36Tt3OmuSyj21s9FEyBLK9KU0OdGPH_eKFRloDywjIZW2aibnjGqBsSygNw9G7t6ZAd882lJ3t3aKsDaKqxSnkQHWSmmCXTIKalTvk8mLQSZd2P8E/s16000/IMG_0469.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Fritatapá de Camarão",
+                price: "25,90",
+                description: "Bolinho frito de vatapá de camarão com base de moqueca, crocante por fora e cremoso por dentro.",
+                image: "🍤",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTvN9s9rV_KCTD75eaN4QWEsxQ56LVPlG9x4UcFnJfTndyip8NpB-VhVpP1iGCO5w3AL8OIyh_dGqcDrn4qdld9EusQf6XPogRE9ooKZXkmlE3-2McekufFd6S54v-pnMsgslmGhwrvXv0NuIviHkhP7PULA2QfaBpnaOyz7_6NpPHQNTscbHwJeqH7DU1/s3888/IMG_0479.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Ensopado de Vaca Atolada",
+                price: "15,90",
+                description: "Caldo de carne moída, legumes e ovo.",
+                image: "🍲",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh4NfuxzGF_z-MdFfySd2lrGrN0tvepFFBhCR7LJMw5G0GF4KmMmfx3FLsnMPLc3toOqkq23koZ4QOxqqtQKoCkTC3tyPkNgHv7h_3sFmursPZ-PrNCak5IqDwvuG1zW9WHV_U2FN7R45RL59fGibXb6vuqLbPaOAQgFrZB0zlz2d4nBMdc3qTXoeN_tygS/s16000/IMG_0480.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Caldo da Caridade",
+                price: "16,90",
+                description: "Caldo de carne moída, legumes e ovo.",
+                image: "🥣",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEiB9D0OEGiaQQWfcoIscSrjxtS_A09kHR6A70F-XcS4Y3HoYmBHsrYM7XnrOM-t9L3gqo6cs2FWpMRRkPv5bTuldGu1tNH59hgW2cC2g0zznCVNhIl1Ot2apS1Ha79gB0IzzmkngVhRxpxxh4xHs9Un1mAdIhp3opBt8i-um7j6Nb-trbAvGMRh4X6stdGd",
+                category: "entradas"
+            },
+            {
+                name: "Carne de Sol Com Macaxeira",
+                price: "39,90",
+                description: "Carne de sol salteada na manteiga da terra e cebolas roxas, servidas com macaxeira cremosa e cubos de queijo coalho.",
+                image: "🥩",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwvwE6DcQbcze_mB2L4tneoeonRVv0eXCxXGSMiE1_f3NxBSkOeFhKNVC9QyTTVVVQgm6G5Oi59aUStQKVh7f5AODDYHn4rPRXlrwksG78o8KRQlCgP2Q3mRa5uLwADZ__0N_1_rx_92GzwXRIB4V7wYlfywNYh38YirtyklGexiCrVpj5wCehiJVrVslo/s3888/IMG_0474.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Sol do Sertão",
+                price: "29,90",
+                description: "Chips crocantes de macaxeira servidas com carne de sol desfiada, creme de leite.",
+                image: "🌞",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiSnsiAPdH97s30LiMn9gGMgidfmRzXDmM6UoIORfIaG8DbQ8Q6VQ8NfX0voK61z-aw2oQTTProT7wAFc1jUKlKIiL3RGyLzGMn2g3q2gZ-LtVUERvQve4eeiORRtg8rm3KqwwQqgmD4spJnFAHw9hVdRv21xdgvFJuiBLqJpFwqJMLRqg5ymk6nmSTm7li/s16000/IMG_0475.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Batata Frita",
+                price: "16,90",
+                description: "Palitos de batata inglesa crocantes e servidos com raspas de queijo e molho de casa.",
+                image: "🍟",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGbh5RkmvuSrJuxuda6jgcIfFt9jyzl4Nz114LtYlwX5tzadKdWjcTpnrjFO9K1jDlcbxjTQ0pPH6LIJpAFuyu58LGlAco9x4oaOIyomLydM6fYaVYGkYXakF_xuPMa5LPjodQ_WOJP7DjiqU5XIie1B4QKrbz1rXpB1qPXgzwy5PyoxwRupQZk_JpJZ13/w1684-h1069-p-k-no-nu/IMG_0580.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Franguim Avuado",
+                price: "22,90",
+                description: "Meio da asa marinada no sous vide, fritas e servidas com molho batata assada de abacaxi e geladinha.",
+                image: "🍗",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpKKw7SMFcvMsVDz5QEjWUzWq7R-DYP-z1nqK2FChXmEtSUrEKyPylAcscuGIzgsl8eOwQLKI_p0jnK4LpSmV9I_K10dcjQWYNTbUekX0N6ZCPABwL42i5NXI7bLpO7taM2Kbg58f_o_DrJVDf3iIfIS0u0nHsXh1povlA090XKRAq_xDP_6bl957EZZSW/s3888/IMG_0484.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Croquetas Caipira",
+                price: "19,90",
+                description: "Croquetas de frango recheados com milho e bacon.",
+                image: "🌽",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEgkaxooT7hzSlO6LZeXLmIzHYnxwxzoGuctJVEJcvoyUNH_G8OHKsNkfwwNhSR3tr-ro7x-WWA_Bx49cwtnDQoXIXP-E7UrhrJbO6B_6RBPW7_s7e57ni16moJ5fWuw_LPuUHrcvh3MXtHygc90bHjjuZxBufgDKdOqD1uCp5P0V3ycLKhOHhJszMYeyM1b",
+                category: "entradas"
+            },
+            {
+                name: "Sushi de Carrasqueira",
+                price: "34,90",
+                description: "Sushi de camarão assado de macaxeira, cubos de queijo de charme e carne de macaxeira, coberto com rapadura.",
+                image: "🍣",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgBQ-3ssQy8zdx81f5l6Ob5sTZUoaq8JkE1GIzB0MolmmztlJcvKjkgGsl_kW7ZwiK7F4NPcst-bkTltqzinqkiGUpdzD_sb7B0AqeDloyUXS10iqFw9km_cwnmJxTPCrcfwpZ7sFT2F0Fww5vxnmgcfVFiqrERQquXS9p9RBImeOwAfw-CYwHqAJfX316v/s6240/IMG_0477.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Isca de Tucunaré",
+                price: "32,90",
+                description: "Tiras de tucunaré à milanesa servido com molho rosé.",
+                image: "🐟",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGrDHT88t5yzUcM1dzqjKzB78qlrBDGi1fRAxgYAcz1e_iBtvgLyUiDsfi0GLkDnTlulBKpb2xd2J42NRTGM1yvSDyIIAzfJ3lh9OaWJwFOLnJdz8r0OArImfuIgFoHH32rKsxR9zJ0aCpvc92ATVhU8tBMUiJuGGeeBvqMVKN_SluQSvj3UrPLD25xdWs/w1684-h1069-p-k-no-nu/IMG_0581.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Filé no Panne",
+                price: "79,90",
+                description: "Tiras de filé mignon salteadas com creme de gorgonzola servido no pão italiano quentinho.",
+                image: "🥩",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjRA9Z7cG17Y6P9hzQNsWSPZcb8xT4WRMd-usR4aU_kwR_T8xqCGAfVnOmxG5RMe6G75Xng91Hz2wO411uLM8Kx_xvbH6lyG2SAl8dAqj2-dOD7s29_DL-zv6VsM3a_nShuyOtBU7oiApMxo60l-E94xbae68aqGTanQklI_VefU8JDmw2zaem4Kjgn41Gx/s3888/IMG_0481.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Ai meu coração",
+                price: "32,90",
+                description: "Coração de galinha marinado no shoyu salteado no molho oriental e servido com chips de macaxeira.",
+                image: "❤️",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh0bV_3PCc6Rdh4XYzdI3XEQwi3yyISCANNd9UJqPlUN9MUPjovfwxUDoUlVFVF4i1vYCAZ9toW5dGoHqR-otUwaDer6AWr3prY18y_1oquOzZGmIj5tqI_L8JvZtcBcvHG8SY2AwP3p1uwXpm4gvP22jxoqfz0RNBa_FyafEGO9MlQKxhddvgYu-YbSxtR/s1320/IMG_0583.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Camarão alho e óleo",
+                price: "54,90",
+                description: "Camarão com cascas salteado no azeite de oliva, alho e limão.",
+                image: "🦐",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpn4qEDPVB-xjJAYw8-VTWe0Iu_zC7PEchdHyLoN-Wgo4wGzty7PKluFAA7FWYwtOHv6oAgkimXwEdwiRZzOCcknmog5F3ElkfwyBCr8AnlI5iKw8FGNk2LbFlUXCCfsKXcI_Nqh86OveUFI1-qOnKUd9VU9dFTkwMbWPEMP24ZOpSZuF1E1ZO1kZQ2Mvy/s1434/IMG_0582.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Torresminho",
+                price: "19,90",
+                description: "Delicioso torresminho crocante tradicional.",
+                image: "🥓",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrhyKER5egYGhdp4SCZ5Kg7SZnkmFBSPn7wdiEH_8uey_mm1pwhEmHu_wHD9CeRqWEVEEyngPD9Olh1z7GcpOY5PWAHh5d8r4alO8isd_l7pjjXBYRgiGrrpiqYJjksWpVvFnjhRBrDal9McOqoKQOK6KCQGbM1k00vZKKlnchSDek6e-LiTRkC6KfcuiZ/w1684-h1069-p-k-no-nu/IMG_0584.jpeg",
+                category: "entradas"
+            },
+            {
+                name: "Camarão João Pessoa",
+                price: "149,90",
+                description: "Arroz gratinado de camarão puxado à base de moqueca e servido com camarões empanados.",
+                image: "🦐",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixP2cSPCmz4MddiB3uvXgmly3xOfaIL91HCmv8KgxNc6McBecOvNChyvhesS73iG0oPnR5tnAj951Ymes2yAi14h-UtOCXE85iDSn9ME8F1uH_0cQ4Gpiq6yPaqdwIJ05od3He9lXES-Y1wH26CVvsR_h16k3CcqefNoTZf-3PkF6UWjx3xmmMQ-TmXnbc/s3888/IMG_0483.jpeg",
+                category: "pratos-principais"
+            },
+            {
+                name: "Filé à Parmegiana",
+                price: "129,90",
+                description: "Tradicional filé empanado servido com cama de molho de tomate italiano e gratin de mussarela, servido com massa (grano duro).",
+                image: "🍝",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiaLEFMgAWPQezMUINHmtHxeziTevB4eegkuvn78MfPN2DpkVA6bsOhzY5TDo26DcC5m0eJJllpxkBbka-Ut9D40o3wk75kgi9KtM-9E8xNZDZ7c136JlGiEmT-_EBSRJl2Mrr-CITT2I0tRkuhkAgPyW7Q2V6Osbz7bD3JwrS70iyq6yW7ma5CmZHRa7G1/s1320/IMG_0587.jpeg",
+                category: "pratos-principais"
+            },
+            {
+                name: "Picanha de Sol",
+                price: "159,00",
+                description: "Steaks de picanha selada na chapa com manteiga de ervas, sal temperado e cebolas roxas, servido com acompanhamentos: Macaxeira cremosa, arroz de brócolis, farofa e vinagrete.",
+                image: "🥩",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEh2Rv3MD-042uJiS9n_ExdXnPLC9Zblef_YHIzD57SxSA3qY15yRSVs09goQWbFHQALa_bWBtMPlmDOs5YEXBl5ERBFlC0yY6NTej5D1xfPksaFWp6v2cNufX_eIR-eyvZbZBSK8rLj_7KsT9sAu_4hK-0XAiW2NBsJcO7_AVqFn8q31CK4YTd4a5z7kcql",
+                category: "pratos-principais"
+            },
+            {
+                name: "Filé de Seu Pedro",
+                price: "189,00",
+                description: "Medalhões de filé mignon selados e flambados servidos com creme de gorgonzola. Acompanha: Arroz pimentone.",
+                image: "🥩",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrTFmhbGuscTa1SrjYXr-Sqn2lqeW7NHCOOafVyTRF1JBarOGLmNUQ12WQRWV8q8lGUuola-yWv9_ROoBWfRpdODSUEFSJdX9G9xvto433Qhz8C1sdKVIEh5jxo7l8oFBfND5LCQolDh4OaaYOn_WibFQGIfvFD9VMpzUQaqj31mMQaKNbF0WN_1g85MeQ/s1462/IMG_0586.jpeg",
+                category: "pratos-principais"
+            },
+            {
+                name: "Costela de Bacurim",
+                price: "79,90",
+                description: "Costela suína assada lentamente regada com barbecue de abacaxi. Acompanha batata corte rústico temperadas com tempero do chef.",
+                image: "🍖",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg-C6Zld-fY1bEWT401V4aoU9n5i1Ln80dEd0fb_hwQGtAr6Cl599ZRMZT0Ofjtwt5ZJotIq0WG5yYJmuo_axNLhWgUywMKrtQQL1NztvygIBmgiaAA1NYjrjl3J45kWSj8BZEiG31zG2kha0lCGUgqXv6JoS8SMp4KDcP0_4H-fg91KMWEiolet7wngiPt/s3888/IMG_0485.jpeg",
+                category: "pratos-principais"
+            },
+            {
+                name: "Cumê de Rico",
+                price: "49,90",
+                description: "Arroz cremoso ao molho branco, puxado com camarões salteados e camarões empanados.",
+                image: "🦐",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjuECi2xjpnvk3EfiX5cqj6qofdqy2tRifJmeELJoYX4E53FQfMVost7cLJTzmQAMFneHiJV0LW-JRzQTW9LTRUSaWZ8ZrGXY55vLVU4klYY840uD5XXr3Qoio1JtLq9cFR5xqo4Oq5D-y5PCkYwLDJtabV_ZaVydLGsSJY6TdREMNoAs-oMIpQm_-3HOrH/s6240/IMG_0588.jpeg",
+                category: "executivos"
+            },
+            {
+                name: "Boi Bêbê",
+                price: "46,90",
+                description: "Costela bovina marinada na cerveja preta e ervas assada levemente ao vapor e servida com nosso delicioso arroz de jerimum e cebolinho.",
+                image: "🍺",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjPlH5EwQb3nLaNFU1g8Uo99Ld4Ob2QwHD-SbJ0RwZpTPL36JR9BPwZGT9B4V1HpJi4g6al2wr7_MXn5_kfW9plZjK9jkKl8sCn8MUDXAaZDMi-lX7KFu2MCuqJNJzHHXw1TZ69oT3FiGXMVDL6ayL7X0ZdFgbZkHi_NMmGrqTLyAggEeHIAYV5znp5iASL/s1506/IMG_0591.jpeg",
+                category: "executivos"
+            },
+            {
+                name: "Cumêzim de Vó",
+                price: "42,90",
+                description: "Arroz vermelho cozido ao leite, servido com chips de macaxeira crocante e carne de sol desfiçada.",
+                image: "🍚",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqNdELCwu7nu4Cvdw2VWFolczTXNI3nT-ZGgNlsRzCXcgUUztAdH-HQawikC_w8uDzG5L4MvgGxvVc0VKevB2FKYjmXVhObQ-TqYGwE5sZVvA52PP82XwM54TyQfDkLevkWqg2DWE84R4USf4jp5Qklmrpb_NfJehy0KnauCtxaAtQy6oi5c2MEGimYFyQ/s1320/IMG_0592.jpeg",
+                category: "executivos"
+            },
+            {
+                name: "Parmegiana",
+                price: "59,90",
+                description: "Filé empanado com cama de molho de tomate italiano e gratin de mussarela, servido com massa italiana.",
+                image: "🍝",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiv_I9Xj8TjcYZbqleQ57g-5p1haruAPqTeOyM4Ty6L3x8I8SjshZxd9vQn7mTWN4JThn_9ugWrZ4RGmgEuOFUCkM5b4SS_tDwMtxhOXAF5rcvVx6eUeQp2AHO13cfbYM3q4aC4l-7NG0Np7yltXcWhC6tT7cTH1BHt8Km0KNWyb6LQFCgP0hJ3Y_JQBrHF/s1675/IMG_0593.jpeg",
+                category: "executivos"
+            },
+            {
+                name: "Baió do 4",
+                price: "49,90",
+                description: "Baió de feijão verde puxado com carne de sol, queijo coalho, charque, torresmo e servido com couve frito.",
+                image: "🫘",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnIq8A0EF0Ed0PzYPn0Xn1SW1VQitEE06ZqkORvRukgmNbrJAObMieff_olxvjWCOyl1cdN-_DThuB3y0cDPBmyO4OxPe8Jzbw_arskmOPMbNBRaeCcQVP_QXKL4ILqI3bV5_271vLWVbpNDJE0z9kQtiX2Z2ViCR5nvFcYOlmXFCNzXy_njqKR9XK0g5C/s3888/1735_Thiago_Ferreira_Fotografia.jpg",
+                category: "executivos"
+            },
+            {
+                name: "Camarão do Chef",
+                price: "72,90",
+                description: "Massa italiana com molho bisque de camarão, finalizado com tomates confitados e camarões salteados.",
+                image: "🍝",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhTI-v_lNJtkfW-putMLKq4sdHNbaiZo4apyyaO2PdOpPGMIXnDLU-NpM5CE0UCkAyAOCu_RAoAeimXjR4m7tV2P-zLk4F9sQfK_HjVQXL9sO_ZNYvq_sLj4X-UEPh3k_zgFbhduFJbou1f8unRU4KYnpUsEw-nkI4T6fS8lJPbiHHT_PChVCV_Qjes7MXZ/s1414/IMG_0594.jpeg",
+                category: "executivos"
+            },
+            {
+                name: "Parmegiana de Frango",
+                price: "34,90",
+                description: "Filé de frango empanado com cama de molho de tomate italiano e gratinado de mussarela servido com massa italiana.",
+                image: "🐔",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhXL-bJp4ImlqkU8XQBMIBOWvX2vFL00gPuiSRyzp-DepWdZ1P-p-8M1hOrKYSsy8SLoGnK0fuyleSaQqXWqM4mBORQ9f_RNOcIsuwB7fLxp5TIWKyFgDXK4RJSGLRjSWdM5R3Ahx9JUX64rlvK_0G1QjBxbeXyP98avg3hCKcDANKl6_75cPVxQzXeFqpP/s3888/1910_Thiago_Ferreira_Fotografia.jpg",
+                category: "executivos"
+            },
+            {
+                name: "Parmegiana Trinchada",
+                price: "34,90",
+                description: "Filé mignon trinchado com molho de tomate italiano e gratinado de queijo mussarela.",
+                image: "🥩",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEiF6I3BDBOJS8w_F1YR2io8T37CXODc9vcAEJMn2zQgKVfbb5Knw3XeqpieM3TOAl-FQVMR8Kf-sG9YwC-MmkjhbZTOOmhfMD1wlFpQTJdpGqnWLmrLmMMsUk-UWVV1571Ne-wBtOZ1fD0f8Gc8KyWyapZURWW-Vz4ykAfjZkq3KVz3ClbZ_W2gleoRsA_Y",
+                category: "executivos"
+            },
+            {
+                name: "Camarão à Romana",
+                price: "49,90",
+                description: "Camarões inteiros com cama de molho rosê e gratinado de mussarela.",
+                image: "🦐",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEiASKv7ExXCLk7vA0_8SRjAaIgOvAdO6gq_2tHHnHvwZzOoZRAK45Y-e7EV754gApgMJyypf68jTDerKm_LNCnhsaTqEzDkaUEQJwNt_HLIAZRJFrRTk_S_evFKqAa3xl08YLcXTAOVKGmhjkWyOT-VzZHJWYV1645JAGtQr5h55E6U-IrWskEWajukMUar",
+                category: "executivos"
+            },
+            {
+                name: "Arroz Plamontese",
+                price: "19,90",
+                description: "Arroz cremoso quatro queijos.",
+                image: "🧀",
+                imageUrl: "https://s2-receitas.glbimg.com/-sgWIXsrYhqvx1NPI2R4u-nPXVU=/0x0:1280x800/1000x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_1f540e0b94d8437dbbc39d567a1dee68/internal_photos/bs/2022/T/v/SCRij3TS2bYO5oGKS10A/arroz-a-piamontese-receita.jpg",
+                category: "executivos"
+            },
+            {
+                name: "Franguim Magrim",
+                price: "49,90",
+                description: "Filé de frango cozido levemente no suco, grelhado na chapa e servido com arroz branco e mix salada crua.",
+                image: "🐔",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEgkzUEIxBh2VQMEHZGKRgPrORdAII9wAp_tW-pRFphk4avURiZMyZoKLy3eyglRyKtte_HFqlEXksQfDsPavG11bIbeyEgTSg7Omam5otkM7AH6CrGAgp6y-VTe_LZ8IBfMKY9FFNyVC80wuvwsk72E8lyH214zqpds3WpArIKcMa4Ab6UdSNFfheivWJgS",
+                category: "executivos"
+            },
+            {
+                name: "Dirmantelo de Goiabada",
+                price: "32,90",
+                description: "Brûlée de creme de queijo de manteiga com calda de goiabada, crumble de biscoito e castanha de caju.",
+                image: "🍮",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQP63-CilGvc5sR03eAHyC_jY8qSio8KO3myjCjCDogbj2VSQ4RIu4-Bx0n0k1NoGzF93sNa2hebTCLlv7wGhbOxbmA4JOmpAA9fgMXEEyxvNZj0yOyWxpRODEQvy-3wRlWUN84iqxSCtrxKmavhiaVOhIqTmPwaQ7MeBiaa7PUj5BPyzJXq5bSeCkv7nh/s5628/2350_Thiago_Ferreira_Fotografia.jpg",
+                category: "sobremesas"
+            },
+            {
+                name: "Pudim Matuto",
+                price: "19,90",
+                description: "Nossa tradicional receita de pudim feito com leite de coco e calda de rapadura.",
+                image: "🍰",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjvN6Igv_vN-9ZL0ct7rHhI8FP_LRC-8Br2SUxw44WLFW42sua_2Ic2K-Kfh-rlBsBREqB3jcNSK1xP1ahOCGW0-gLxNo1Mo8MZIQdIeLtABBIu-tiQG7m1yr7PfrzjucggWXnLebTWqzf3IDEySNSKjMdXEIQSiTjwfse19yeWjb6k354R_LHLsD1yohXM/s6240/2579_Thiago_Ferreira_Fotografia.jpg",
+                category: "sobremesas"
+            },
+            {
+                name: "Bagaceira de Chocolate",
+                price: "32,90",
+                description: "Gran Gateau de chocolate com picolé crocante.",
+                image: "🍫",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_wYresLuUGumZHiNmj2VCk-SCBI7g3ASxsVU34QeF66eyV59u-jmL1bPVyiIzJ9TzP4eJjPqBNgyakc0JAI1OlAjHCUTCyds_42EzryD_Eqo1awBm4_dWELSRsGNoBd1lEMD-lJBJkip1WdqniSsKXkoSYRCLvl5JNgT2ZZSTrsKgnuE5vy6pDHXjVBup/s6240/1952_Thiago_Ferreira_Fotografia.jpg",
+                category: "sobremesas"
+            },
+            {
+                name: "Cocada Quente",
+                price: "34,90",
+                description: "Cocada cremosa assada ao forno com brûlée e sorvete de creme.",
+                image: "🥥",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpX75QJLs-Bq7JoswISnWqYvcTaBbLqTGyW7zbmbGuG8wtvrnFD9Z-QeAD8SOIFHYKBxePixp463qyL6mueCWMgjLN5dGcgEq0HvLA7L8c1hYrGkGq88TakacSrK1nd2BgqthqJr7zytNi3nF8ThtnsVtU1jgbibIpV9kVoDVgKpPbDV-AeX846fCXB-Uy/s1600/b1da8d55-adec-43ff-b2fb-1afedb34ab33.jfif",
+                category: "sobremesas"
+            },
+            {
+                name: "Surpresa de Morango",
+                price: "34,90",
+                description: "Creme baunilha, sorvete creme e geleia de morango.",
+                image: "🍓",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEj-tWZMjux990iitkIZQMFx_Nx8f2_6SJS4JPlJIGTr3oAnOsFiu8A6UpF4_eOEvAeXcZG45L-nOKU5_WRyA7pYe_0qMan4V6vcptlguehv7bJKQo-HaugiNAA2xRxnFC4OVUNlZiU5FXlb9wO0_pgP6TUOlx9YDse7zGl0Yx5UZAf6zWrFVv353nbDax5_",
+                category: "sobremesas"
+            }
+        ];
+
+        function createWhatsAppLink(dishName) {
+            const phoneNumber = "5583991795370";
+            const message = `Olá! Gostaria de pedir ${dishName}`;
+            const encodedMessage = encodeURIComponent(message);
+            return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        }
+
+
+
+        const whatsappIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>`;
+
+        function createDishCard(item) {
+            const escapedName = item.name.replace(/'/g, "\\'");
+            const imageContent = item.imageUrl ? 
+                `<img src="${item.imageUrl}" alt="${item.name}" class="w-full h-48 object-cover lazy-load cursor-pointer hover:opacity-90 transition-opacity" loading="lazy" decoding="async" onclick="openModal('${item.imageUrl}', '${escapedName}')" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                 <div class="h-48 bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center" style="display: none;">
+                     <span class="text-6xl" role="img" aria-label="${item.name}">${item.image}</span>
+                 </div>` :
+                `<div class="h-48 bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
+                     <span class="text-6xl" role="img" aria-label="${item.name}">${item.image}</span>
+                 </div>`;
+
+            return `
+                <article class="dish-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100" itemscope itemtype="https://schema.org/MenuItem">
+                    <div class="relative">
+                        ${imageContent}
+                        <div class="price-tag absolute top-4 right-4 text-white px-3 py-1 rounded-full font-bold text-lg" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                            <span itemprop="price">R$ ${item.price}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3" itemprop="name">${item.name}</h3>
+                        <p class="text-gray-600 mb-4 text-sm leading-relaxed" itemprop="description">${item.description}</p>
+                        
+                        <button 
+                            onclick="openWhatsApp('${escapedName}')"
+                            class="whatsapp-btn w-full text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2"
+                            aria-label="Pedir ${item.name} pelo WhatsApp"
+                        >
+                            ${whatsappIcon}
+                            Pedir pelo WhatsApp
+                        </button>
+                    </div>
+                </article>
+            `;
+        }
+
+        // Optimized WhatsApp function
+        function openWhatsApp(dishName) {
+            const phoneNumber = "5583991795370";
+            const message = `Olá! Gostaria de pedir ${dishName}`;
+            const encodedMessage = encodeURIComponent(message);
+            const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // Modal functions
+        function openModal(imageUrl, dishName) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('show');
+            modalImg.src = imageUrl;
+            modalImg.alt = dishName;
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Close modal when clicking outside the image
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Optimized lazy loading for images
+        function initLazyLoading() {
+            const lazyImages = document.querySelectorAll('.lazy-load:not(.loaded)');
+            
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.classList.add('loaded');
+                            observer.unobserve(img);
+                        }
+                    });
+                }, {
+                    rootMargin: '50px 0px',
+                    threshold: 0.1
+                });
+
+                lazyImages.forEach(img => {
+                    imageObserver.observe(img);
+                });
+            } else {
+                // Fallback for older browsers
+                lazyImages.forEach(img => img.classList.add('loaded'));
+            }
+        }
+
+        // Optimized render with batch processing
+        function renderMenu() {
+            const grids = {
+                entradas: document.getElementById('entradasGrid'),
+                'pratos-principais': document.getElementById('pratosGrid'),
+                executivos: document.getElementById('executivosGrid'),
+                sobremesas: document.getElementById('sobremesasGrid')
+            };
+            
+            // Group items by category for efficient processing
+            const categorizedItems = menuItems.reduce((acc, item) => {
+                if (!acc[item.category]) acc[item.category] = [];
+                acc[item.category].push(item);
+                return acc;
+            }, {});
+            
+            // Render each category efficiently
+            Object.entries(categorizedItems).forEach(([category, items]) => {
+                const grid = grids[category];
+                if (!grid) return;
+                
+                const fragment = document.createDocumentFragment();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = items.map(createDishCard).join('');
+                
+                // Move all children to fragment
+                while (tempDiv.firstChild) {
+                    fragment.appendChild(tempDiv.firstChild);
+                }
+                
+                grid.appendChild(fragment);
+            });
+            
+            // Initialize lazy loading after render
+            requestAnimationFrame(() => {
+                initLazyLoading();
+            });
+        }
+
+        // Smooth scroll to section function
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const headerHeight = 100; // Account for fixed header space
+                const elementPosition = section.offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: elementPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Banner slider functionality
+        let currentSlide = 0;
+        const totalSlides = 5;
+        let slideInterval;
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.banner-slide');
+            const indicators = document.querySelectorAll('.banner-indicator');
+            
+            // Remove active class from all slides and indicators
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+            
+            // Add active class to current slide and indicator
+            slides[index].classList.add('active');
+            indicators[index].classList.add('active');
+            
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            // Restart the interval when user manually changes slide
+            clearInterval(slideInterval);
+            startSlideShow();
+        }
+
+        function startSlideShow() {
+            slideInterval = setInterval(nextSlide, 3000); // Change slide every 3 seconds
+        }
+
+        // Performance optimized initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Use requestAnimationFrame for smooth rendering
+            requestAnimationFrame(() => {
+                renderMenu();
+                startSlideShow();
+            });
+        });
+
+        // Optimized resource preloading
+        window.addEventListener('load', function() {
+            // Preload WhatsApp on first user interaction
+            let whatsappPreloaded = false;
+            const preloadWhatsApp = () => {
+                if (!whatsappPreloaded) {
+                    const link = document.createElement('link');
+                    link.rel = 'dns-prefetch';
+                    link.href = 'https://wa.me';
+                    document.head.appendChild(link);
+                    whatsappPreloaded = true;
+                }
+            };
+
+            // Listen for any user interaction
+            ['mouseenter', 'touchstart', 'focus'].forEach(event => {
+                document.addEventListener(event, preloadWhatsApp, { once: true, passive: true });
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c2bb39404a12fd',t:'MTc1NzM3OTQ0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
