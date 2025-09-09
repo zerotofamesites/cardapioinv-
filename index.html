@@ -3,214 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cardápio Digital - Sabores autênticos do Nordeste. Pastéis, frutos do mar, carnes e muito mais!">
-    <meta name="keywords" content="cardápio, restaurante, nordeste, pastéis, frutos do mar, delivery">
-    <meta name="author" content="Cardápio Digital">
-    <meta name="theme-color" content="#dc2626">
-    <title>Cardápio Digital - Sabores Autênticos do Nordeste</title>
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <title>Cardápio Digital - Restaurante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script:wght@700&display=swap"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- DNS prefetch for external domains -->
-    <link rel="dns-prefetch" href="//blogger.googleusercontent.com">
-    <link rel="dns-prefetch" href="//wa.me">
-    
-    <script src="https://cdn.tailwindcss.com" defer></script>
     <style>
-        :root {
-            --primary-red: #dc2626;
-            --primary-orange: #ea580c;
-            --primary-green: #16a34a;
-            --whatsapp-green: #25d366;
-            --whatsapp-dark: #128c7e;
-        }
-        
         * {
-            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
         
-        body { 
-            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-            scroll-behavior: smooth;
-            line-height: 1.6;
+        .banner-slide {
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .banner-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .banner-indicator.active {
+            opacity: 1 !important;
+            transform: scale(1.2);
         }
         
         .dish-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-            contain: layout style paint;
+            transition: all 0.3s ease;
         }
         
         .dish-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
         
         .price-tag {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
         }
         
         .whatsapp-btn {
-            background: linear-gradient(135deg, var(--whatsapp-green), var(--whatsapp-dark));
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            transition: all 0.3s ease;
         }
         
         .whatsapp-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+            background: linear-gradient(135deg, #128C7E, #075E54);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
         }
         
-        .lazy-load {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            background: #f3f4f6;
-        }
-        
-        .lazy-load.loaded {
-            opacity: 1;
-        }
-        
-        .nav-btn {
-            min-width: 160px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.2s ease;
+        .nav-btn:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
         
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(5px);
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .modal.show {
             display: flex;
+            opacity: 1;
             align-items: center;
             justify-content: center;
         }
         
         .modal-content {
-            max-width: 90vw;
-            max-height: 90vh;
-            border-radius: 15px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            max-width: 90%;
+            max-height: 90%;
             object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
         
         .close {
             position: absolute;
             top: 20px;
             right: 35px;
-            color: white;
+            color: #fff;
             font-size: 40px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 1001;
-            transition: color 0.2s ease;
-            user-select: none;
+            transition: color 0.3s ease;
         }
         
         .close:hover {
-            color: #ff6b6b;
+            color: #ef4444;
         }
         
-        .banner-slide {
-            position: absolute;
-            inset: 0;
+        .lazy-load {
             opacity: 0;
-            transition: opacity 0.6s ease-in-out;
+            transition: opacity 0.3s ease;
         }
         
-        .banner-slide.active {
+        .lazy-load.loaded {
             opacity: 1;
         }
         
-        .banner-indicator.active {
-            opacity: 1 !important;
-            background-color: var(--primary-red);
-        }
-        
-        /* Mobile optimizations */
         @media (max-width: 768px) {
-            .dish-card:hover {
-                transform: none;
-            }
-            .whatsapp-btn:hover {
-                transform: none;
-            }
             .nav-btn {
-                min-width: 140px;
                 font-size: 14px;
                 padding: 12px 16px;
             }
-            .close {
-                top: 10px;
-                right: 20px;
-                font-size: 30px;
+            
+            .banner-slide h1 {
+                font-size: 2rem;
+            }
+            
+            .banner-slide p {
+                font-size: 1rem;
             }
         }
         
-        /* Performance optimizations */
-        .grid {
-            contain: layout;
+        .banner-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
-        img {
-            content-visibility: auto;
+        .slide-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .slide-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .slide-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        
+        .text-shadow-lg {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
         
-        /* Reduce motion for accessibility */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+        .text-shadow-md {
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-red-50 to-red-100 min-h-screen">
+<body class="bg-gray-50">
     <!-- Header -->
-    <header class="bg-gradient-to-r from-red-600 to-red-700 text-white py-8 shadow-lg">
-        <div class="container mx-auto px-4 text-center relative">
-            <div class="mb-2">
-                <h1 class="text-6xl font-bold" style="font-family: 'Dancing Script', cursive;">Cardápio Digital</h1>
-                            </div>
-            <p class="text-lg opacity-90 italic" style="font-family: 'Catamaran', sans-serif;">Comida gostosa do jeitin do abraço de vó</p>
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-red-500">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhtI8TskeLJv2S49G5NbBX_Q2-qmkJxU6mSkJLwoKCCe5qa6_HSm2n0XEvT0g11B7GUgXrs9iZ6feAlvrnFecAogM5L0P0nmTEPzrwUvJ3p8qKgtliQvWA1Ja6dUv68aV9TCNdgMoi_Qf_szWXgJQNjh-KfvjdAKN3KCF9OZEL7J84HE3YGn3wwJYzEHVuu" alt="Logo do Restaurante" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-white font-bold text-xl bg-gradient-to-r from-red-500 to-red-600 w-full h-full flex items-center justify-center rounded-full\'>R</span>';">
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Cardápio Digital</h1>
+                        <p class="text-gray-600 text-sm">Sabores únicos, experiências inesquecíveis</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <span class="text-gray-600">📞 (83) 9179-5370</span>
+                </div>
+            </div>
         </div>
     </header>
 
-
-
     <!-- Banner Section -->
-    <div class="container mx-auto px-4 py-8">
-        <div class="mb-8 relative overflow-hidden rounded-2xl shadow-lg">
-            <div id="bannerSlider" class="relative w-full h-64 md:h-80 lg:h-96">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjhmE0OTRK7lb66CSxjkcb1Luwlhs6YJMpuGvWRFRx-h3WDa9l6k1yuHOIiOjcRxw5ciAdTrVR-84RBHLqMCOCAeNIS8SixwgmtOk8vH457UsVV_2BXvJUTXPmSEECgMrZLAhzh8fvIF2UR7tFaudvoLrktx1pbctMa_2V-lBi7pJxQR8qQMgPX5iMqN6rX" alt="Banner promocional 1" class="banner-slide active w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high" onerror="this.style.display='none';">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhPCL7QukDvNlp-1J25iyuUKLbYMYWST-dXOebXLUjyFpcT5zaPyLQ9XWONx1WMSUAcCGNQKEG-i_lz2n2Y6_jb5cExiN3KggrFAYq3YdX8bswynugvSg2iJyoOJd06KWrvbsdypfTpppDw7hpkZJJvL5WQeHQttTspc9iwPq3si4jFJcyXw7CZYObGUF5W" alt="Banner promocional 2" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiuXw7DOBRnACdkMEihATXmociQtUI6CDSGy6jQDLOjRKwAUC5rT9--hJE-of1Mz3MbZnGp0RERMa1yEoczxVz_yCC-usibs1bR36FJvlKNRdRt9QRTESUWBspC58XpPW2ySzkeAdiNHoPcBwuYnF-ksmMtG5JdlCTT_aQ-6_EDomFga9TunV0JORa-Y0jB" alt="Banner promocional 3" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgZiW16dFhCdAgNgl1E4AdKnkFQISv6sOZ4V3TD0Xgk-4_Q5kKx1ToXYFB55mGGazelsC16yDtIh3xIq7mpJvrDUuIu-qpWjndH8hXAj3TBoMpMjpuOBRLYboobkKeye_5XtHDo99JWADBKW0mjNcJ5YJyLCHRzhEEJ4rucEBSsFP8uH3HKsB3ixKqrt9t6" alt="Banner promocional 4" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
-                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhND6BswTyW2Vc4RAD_MSuxCMbf8pXuST3INczNBlrqdz1OOz03d7HA-cMit-voHXZ1cVi27xctdddicbfOzo6VhGIzYMYT43pQ68CQYvJR9PbrOiRzASQ-B-H01yqvC8F29c7nroQElNR48j9wN6KPgWLNPW88r70CnAuHxcd73TRqyYXx3-vey8yolKTh" alt="Banner promocional 5" class="banner-slide w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none';">
-                
-                <!-- Indicadores -->
-                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                    <button class="banner-indicator active w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(0)"></button>
-                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(1)"></button>
-                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(2)"></button>
-                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(3)"></button>
-                    <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(4)"></button>
+    <div class="banner-container relative h-96 overflow-hidden">
+        <div class="relative h-full">
+            <!-- Slide 1 -->
+            <div class="banner-slide slide-1 active flex items-center justify-center text-white text-center" style="background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjIygdJl0zlDqB2M-HKoX_kPWNt2Dnnt0juhtpwYnJqc4baAaGzzahREGevZWEzyXIngQ5gR2o1zbWyr_ZxmxY8iM9jzpeyIMNnx92n8xvNpNlbbnuAEpnxEwwjJnEV6fI3u9Lh7TNNC-8LWAtZiOjU-XMEipM7X3C5n1O6HJAnNS1cpPlCWNLkMOgUsMrD/s1584/Banner%20para%20LinkedIn%20Advogada%20Moderno%20Elegante%20Simples%20Azul%20Branco.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+                <div class="max-w-4xl mx-auto px-4 relative z-10">
+                    <h1 class="text-5xl font-bold mb-4 text-shadow-lg">Bem-vindos ao nosso Restaurante</h1>
+                    <p class="text-xl mb-8 text-shadow-md">Descubra sabores únicos e pratos especiais preparados com carinho</p>
+                    <button onclick="scrollToSection('entradas')" class="bg-white text-gray-800 font-semibold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors shadow-lg">
+                        Ver Cardápio
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="banner-slide slide-2 flex items-center justify-center text-white text-center" style="background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjuECi2xjpnvk3EfiX5cqj6qofdqy2tRifJmeELJoYX4E53FQfMVost7cLJTzmQAMFneHiJV0LW-JRzQTW9LTRUSaWZ8ZrGXY55vLVU4klYY840uD5XXr3Qoio1JtLq9cFR5xqo4Oq5D-y5PCkYwLDJtabV_ZaVydLGsSJY6TdREMNoAs-oMIpQm_-3HOrH/s6240/IMG_0588.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div class="max-w-4xl mx-auto px-4 relative z-10">
+                    <h1 class="text-5xl font-bold mb-4 text-shadow-lg">Pratos Executivos</h1>
+                    <p class="text-xl mb-8 text-shadow-md">Refeições completas e saborosas para o seu dia a dia</p>
+                    <button onclick="scrollToSection('executivos')" class="bg-white text-gray-800 font-semibold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors shadow-lg">
+                        Ver Executivos
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="banner-slide slide-3 flex items-center justify-center text-white text-center" style="background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHIcIycf3R3LuY-iN4fMAGq-fYhqWzQqNY1pfqwMeEPz9ktQ81a8lrcDwsQPuxq2HuGJOja4hrPXh36Tt3OmuSyj21s9FEyBLK9KU0OdGPH_eKFRloDywjIZW2aibnjGqBsSygNw9G7t6ZAd882lJ3t3aKsDaKqxSnkQHWSmmCXTIKalTvk8mLQSZd2P8E/s16000/IMG_0469.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div class="max-w-4xl mx-auto px-4 relative z-10">
+                    <h1 class="text-5xl font-bold mb-4 text-shadow-lg">Entradas Especiais</h1>
+                    <p class="text-xl mb-8 text-shadow-md">Comece sua refeição com nossas deliciosas entradas</p>
+                    <button onclick="scrollToSection('entradas')" class="bg-white text-gray-800 font-semibold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors shadow-lg">
+                        Ver Entradas
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Slide 4 -->
+            <div class="banner-slide slide-4 flex items-center justify-center text-white text-center" style="background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixP2cSPCmz4MddiB3uvXgmly3xOfaIL91HCmv8KgxNc6McBecOvNChyvhesS73iG0oPnR5tnAj951Ymes2yAi14h-UtOCXE85iDSn9ME8F1uH_0cQ4Gpiq6yPaqdwIJ05od3He9lXES-Y1wH26CVvsR_h16k3CcqefNoTZf-3PkF6UWjx3xmmMQ-TmXnbc/s3888/IMG_0483.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div class="max-w-4xl mx-auto px-4 relative z-10">
+                    <h1 class="text-5xl font-bold mb-4 text-shadow-lg">Pratos Principais</h1>
+                    <p class="text-xl mb-8 text-shadow-md">Experimente nossos pratos principais cheios de sabor</p>
+                    <button onclick="scrollToSection('pratos-principais')" class="bg-white text-gray-800 font-semibold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors shadow-lg">
+                        Ver Pratos
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Slide 5 -->
+            <div class="banner-slide slide-5 flex items-center justify-center text-white text-center" style="background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwvwE6DcQbcze_mB2L4tneoeonRVv0eXCxXGSMiE1_f3NxBSkOeFhKNVC9QyTTVVVQgm6G5Oi59aUStQKVh7f5AODDYHn4rPRXlrwksG78o8KRQlCgP2Q3mRa5uLwADZ__0N_1_rx_92GzwXRIB4V7wYlfywNYh38YirtyklGexiCrVpj5wCehiJVrVslo/s3888/IMG_0474.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div class="max-w-4xl mx-auto px-4 relative z-10">
+                    <h1 class="text-5xl font-bold mb-4 text-shadow-lg">Peça pelo WhatsApp</h1>
+                    <p class="text-xl mb-8 text-shadow-md">Faça seu pedido de forma rápida e prática</p>
+                    <button onclick="openWhatsApp('Cardápio Digital')" class="bg-green-500 text-white font-semibold py-3 px-8 rounded-full hover:bg-green-600 transition-colors flex items-center gap-2 mx-auto shadow-lg">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                        </svg>
+                        Fazer Pedido
+                    </button>
                 </div>
             </div>
         </div>
         
+        <!-- Banner Navigation -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+            <div class="flex space-x-3">
+                <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(0)"></button>
+                <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(1)"></button>
+                <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(2)"></button>
+                <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(3)"></button>
+                <button class="banner-indicator w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" onclick="goToSlide(4)"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
         <!-- Navigation Buttons -->
         <div class="flex flex-wrap justify-start gap-4 mb-8">
             <button onclick="scrollToSection('entradas')" class="nav-btn bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
@@ -221,9 +262,6 @@
             </button>
             <button onclick="scrollToSection('executivos')" class="nav-btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
                 <span>Pratos Executivos</span>
-            </button>
-            <button onclick="scrollToSection('sobremesas')" class="nav-btn bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
-                <span>Sobremesas</span>
             </button>
         </div>
     </div>
@@ -266,17 +304,6 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="executivosGrid">
                 <!-- Pratos executivos will be populated by JavaScript -->
-            </div>
-        </div>
-
-        <!-- Sobremesas Section -->
-        <div id="sobremesas" class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-left border-b-4 border-pink-500 pb-4" style="font-family: 'Mediapro', sans-serif;">
-                Sobremesas
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sobremesasGrid">
-                <!-- Sobremesas will be populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -520,7 +547,7 @@
                 price: "49,90",
                 description: "Camarões inteiros com cama de molho rosê e gratinado de mussarela.",
                 image: "🦐",
-                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEiASKv7ExXCLk7vA0_8SRjAaIgOvAdO6gq_2tHHnHvwZzOoZRAK45Y-e7EV754gApgMJyypf68jTDerKm_LNCnhsaTqEzDkaUEQJwNt_HLIAZRJFrRTk_S_evFKqAa3xl08YLcXTAOVKGmhjkWyOT-VzZHJWYV1645JAGtQr5h55E6U-IrWskEWajukMUar",
+                imageUrl: "",
                 category: "executivos"
             },
             {
@@ -538,46 +565,6 @@
                 image: "🐔",
                 imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEgkzUEIxBh2VQMEHZGKRgPrORdAII9wAp_tW-pRFphk4avURiZMyZoKLy3eyglRyKtte_HFqlEXksQfDsPavG11bIbeyEgTSg7Omam5otkM7AH6CrGAgp6y-VTe_LZ8IBfMKY9FFNyVC80wuvwsk72E8lyH214zqpds3WpArIKcMa4Ab6UdSNFfheivWJgS",
                 category: "executivos"
-            },
-            {
-                name: "Dirmantelo de Goiabada",
-                price: "32,90",
-                description: "Brûlée de creme de queijo de manteiga com calda de goiabada, crumble de biscoito e castanha de caju.",
-                image: "🍮",
-                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQP63-CilGvc5sR03eAHyC_jY8qSio8KO3myjCjCDogbj2VSQ4RIu4-Bx0n0k1NoGzF93sNa2hebTCLlv7wGhbOxbmA4JOmpAA9fgMXEEyxvNZj0yOyWxpRODEQvy-3wRlWUN84iqxSCtrxKmavhiaVOhIqTmPwaQ7MeBiaa7PUj5BPyzJXq5bSeCkv7nh/s5628/2350_Thiago_Ferreira_Fotografia.jpg",
-                category: "sobremesas"
-            },
-            {
-                name: "Pudim Matuto",
-                price: "19,90",
-                description: "Nossa tradicional receita de pudim feito com leite de coco e calda de rapadura.",
-                image: "🍰",
-                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjvN6Igv_vN-9ZL0ct7rHhI8FP_LRC-8Br2SUxw44WLFW42sua_2Ic2K-Kfh-rlBsBREqB3jcNSK1xP1ahOCGW0-gLxNo1Mo8MZIQdIeLtABBIu-tiQG7m1yr7PfrzjucggWXnLebTWqzf3IDEySNSKjMdXEIQSiTjwfse19yeWjb6k354R_LHLsD1yohXM/s6240/2579_Thiago_Ferreira_Fotografia.jpg",
-                category: "sobremesas"
-            },
-            {
-                name: "Bagaceira de Chocolate",
-                price: "32,90",
-                description: "Gran Gateau de chocolate com picolé crocante.",
-                image: "🍫",
-                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_wYresLuUGumZHiNmj2VCk-SCBI7g3ASxsVU34QeF66eyV59u-jmL1bPVyiIzJ9TzP4eJjPqBNgyakc0JAI1OlAjHCUTCyds_42EzryD_Eqo1awBm4_dWELSRsGNoBd1lEMD-lJBJkip1WdqniSsKXkoSYRCLvl5JNgT2ZZSTrsKgnuE5vy6pDHXjVBup/s6240/1952_Thiago_Ferreira_Fotografia.jpg",
-                category: "sobremesas"
-            },
-            {
-                name: "Cocada Quente",
-                price: "34,90",
-                description: "Cocada cremosa assada ao forno com brûlée e sorvete de creme.",
-                image: "🥥",
-                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpX75QJLs-Bq7JoswISnWqYvcTaBbLqTGyW7zbmbGuG8wtvrnFD9Z-QeAD8SOIFHYKBxePixp463qyL6mueCWMgjLN5dGcgEq0HvLA7L8c1hYrGkGq88TakacSrK1nd2BgqthqJr7zytNi3nF8ThtnsVtU1jgbibIpV9kVoDVgKpPbDV-AeX846fCXB-Uy/s1600/b1da8d55-adec-43ff-b2fb-1afedb34ab33.jfif",
-                category: "sobremesas"
-            },
-            {
-                name: "Surpresa de Morango",
-                price: "34,90",
-                description: "Creme baunilha, sorvete creme e geleia de morango.",
-                image: "🍓",
-                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEj-tWZMjux990iitkIZQMFx_Nx8f2_6SJS4JPlJIGTr3oAnOsFiu8A6UpF4_eOEvAeXcZG45L-nOKU5_WRyA7pYe_0qMan4V6vcptlguehv7bJKQo-HaugiNAA2xRxnFC4OVUNlZiU5FXlb9wO0_pgP6TUOlx9YDse7zGl0Yx5UZAf6zWrFVv353nbDax5_",
-                category: "sobremesas"
             }
         ];
 
@@ -588,14 +575,9 @@
             return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
         }
 
-
-
-        const whatsappIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>`;
-
         function createDishCard(item) {
-            const escapedName = item.name.replace(/'/g, "\\'");
             const imageContent = item.imageUrl ? 
-                `<img src="${item.imageUrl}" alt="${item.name}" class="w-full h-48 object-cover lazy-load cursor-pointer hover:opacity-90 transition-opacity" loading="lazy" decoding="async" onclick="openModal('${item.imageUrl}', '${escapedName}')" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                `<img src="${item.imageUrl}" alt="${item.name}" class="w-full h-48 object-cover lazy-load cursor-pointer hover:opacity-90 transition-opacity" loading="lazy" onclick="openModal('${item.imageUrl}', '${item.name.replace(/'/g, "\\'")}')" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                  <div class="h-48 bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center" style="display: none;">
                      <span class="text-6xl" role="img" aria-label="${item.name}">${item.image}</span>
                  </div>` :
@@ -617,11 +599,13 @@
                         <p class="text-gray-600 mb-4 text-sm leading-relaxed" itemprop="description">${item.description}</p>
                         
                         <button 
-                            onclick="openWhatsApp('${escapedName}')"
+                            onclick="openWhatsApp('${item.name.replace(/'/g, "\\'")}')"
                             class="whatsapp-btn w-full text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2"
                             aria-label="Pedir ${item.name} pelo WhatsApp"
                         >
-                            ${whatsappIcon}
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                            </svg>
                             Pedir pelo WhatsApp
                         </button>
                     </div>
@@ -668,70 +652,67 @@
             }
         });
 
-        // Optimized lazy loading for images
+        // Lazy loading for images
         function initLazyLoading() {
-            const lazyImages = document.querySelectorAll('.lazy-load:not(.loaded)');
+            const lazyImages = document.querySelectorAll('.lazy-load');
             
             if ('IntersectionObserver' in window) {
                 const imageObserver = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            const img = entry.target;
-                            img.classList.add('loaded');
-                            observer.unobserve(img);
+                            entry.target.classList.add('loaded');
+                            observer.unobserve(entry.target);
                         }
                     });
-                }, {
-                    rootMargin: '50px 0px',
-                    threshold: 0.1
                 });
 
-                lazyImages.forEach(img => {
-                    imageObserver.observe(img);
-                });
+                lazyImages.forEach(img => imageObserver.observe(img));
             } else {
                 // Fallback for older browsers
                 lazyImages.forEach(img => img.classList.add('loaded'));
             }
         }
 
-        // Optimized render with batch processing
+        // Optimized render with virtual scrolling concept
         function renderMenu() {
-            const grids = {
-                entradas: document.getElementById('entradasGrid'),
-                'pratos-principais': document.getElementById('pratosGrid'),
-                executivos: document.getElementById('executivosGrid'),
-                sobremesas: document.getElementById('sobremesasGrid')
-            };
+            const entradasGrid = document.getElementById('entradasGrid');
+            const pratosGrid = document.getElementById('pratosGrid');
+            const executivosGrid = document.getElementById('executivosGrid');
             
-            // Group items by category for efficient processing
-            const categorizedItems = menuItems.reduce((acc, item) => {
-                if (!acc[item.category]) acc[item.category] = [];
-                acc[item.category].push(item);
-                return acc;
-            }, {});
+            // Filter items by category
+            const entradas = menuItems.filter(item => item.category === 'entradas');
+            const pratos = menuItems.filter(item => item.category === 'pratos-principais');
+            const executivos = menuItems.filter(item => item.category === 'executivos');
             
-            // Render each category efficiently
-            Object.entries(categorizedItems).forEach(([category, items]) => {
-                const grid = grids[category];
-                if (!grid) return;
-                
-                const fragment = document.createDocumentFragment();
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = items.map(createDishCard).join('');
-                
-                // Move all children to fragment
-                while (tempDiv.firstChild) {
-                    fragment.appendChild(tempDiv.firstChild);
-                }
-                
-                grid.appendChild(fragment);
-            });
+            // Render entradas
+            const entradasFragment = document.createDocumentFragment();
+            const entradasDiv = document.createElement('div');
+            entradasDiv.innerHTML = entradas.map(item => createDishCard(item)).join('');
+            while (entradasDiv.firstChild) {
+                entradasFragment.appendChild(entradasDiv.firstChild);
+            }
+            entradasGrid.appendChild(entradasFragment);
+            
+            // Render pratos principais
+            const pratosFragment = document.createDocumentFragment();
+            const pratosDiv = document.createElement('div');
+            pratosDiv.innerHTML = pratos.map(item => createDishCard(item)).join('');
+            while (pratosDiv.firstChild) {
+                pratosFragment.appendChild(pratosDiv.firstChild);
+            }
+            pratosGrid.appendChild(pratosFragment);
+            
+            // Render pratos executivos
+            const executivosFragment = document.createDocumentFragment();
+            const executivosDiv = document.createElement('div');
+            executivosDiv.innerHTML = executivos.map(item => createDishCard(item)).join('');
+            while (executivosDiv.firstChild) {
+                executivosFragment.appendChild(executivosDiv.firstChild);
+            }
+            executivosGrid.appendChild(executivosFragment);
             
             // Initialize lazy loading after render
-            requestAnimationFrame(() => {
-                initLazyLoading();
-            });
+            setTimeout(initLazyLoading, 100);
         }
 
         // Smooth scroll to section function
@@ -789,29 +770,23 @@
             // Use requestAnimationFrame for smooth rendering
             requestAnimationFrame(() => {
                 renderMenu();
-                startSlideShow();
+                startSlideShow(); // Start the banner slideshow
             });
         });
 
-        // Optimized resource preloading
+        // Preload critical resources
         window.addEventListener('load', function() {
-            // Preload WhatsApp on first user interaction
-            let whatsappPreloaded = false;
-            const preloadWhatsApp = () => {
-                if (!whatsappPreloaded) {
+            // Preload WhatsApp if user shows intent
+            const buttons = document.querySelectorAll('.whatsapp-btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
                     const link = document.createElement('link');
                     link.rel = 'dns-prefetch';
                     link.href = 'https://wa.me';
                     document.head.appendChild(link);
-                    whatsappPreloaded = true;
-                }
-            };
-
-            // Listen for any user interaction
-            ['mouseenter', 'touchstart', 'focus'].forEach(event => {
-                document.addEventListener(event, preloadWhatsApp, { once: true, passive: true });
+                }, { once: true });
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c2bb39404a12fd',t:'MTc1NzM3OTQ0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c3474491fb12fd',t:'MTc1NzM4NTE4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
