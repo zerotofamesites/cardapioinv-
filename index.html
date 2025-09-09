@@ -253,15 +253,35 @@
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
         <!-- Navigation Buttons -->
-        <div class="flex flex-wrap justify-start gap-4 mb-8">
-            <button onclick="scrollToSection('entradas')" class="nav-btn bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
-                <span>Entradas</span>
+        <div class="flex flex-wrap justify-center gap-6 mb-12">
+            <button onclick="scrollToSection('entradas')" class="modern-nav-btn group relative bg-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 text-gray-800 hover:text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-500 flex items-center justify-center gap-3 border-2 border-red-200 hover:border-transparent overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-400 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <span class="relative z-10 text-2xl">🍽️</span>
+                <span class="relative z-10 text-lg">Entradas</span>
+                <div class="absolute -top-2 -right-2 w-4 h-4 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse"></div>
             </button>
-            <button onclick="scrollToSection('pratos-principais')" class="nav-btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
-                <span>Pratos Principais</span>
+            
+            <button onclick="openVinhos()" class="modern-nav-btn group relative bg-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 text-gray-800 hover:text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-500 flex items-center justify-center gap-3 border-2 border-red-200 hover:border-transparent overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-400 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <span class="relative z-10 text-2xl">🍷</span>
+                <span class="relative z-10 text-lg">Vinhos</span>
+                <div class="absolute -top-2 -right-2 w-4 h-4 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse"></div>
             </button>
-            <button onclick="scrollToSection('executivos')" class="nav-btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
-                <span>Pratos Executivos</span>
+            
+            <button onclick="scrollToSection('sobremesas')" class="modern-nav-btn group relative bg-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 text-gray-800 hover:text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-500 flex items-center justify-center gap-3 border-2 border-red-200 hover:border-transparent overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-400 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <span class="relative z-10 text-2xl">🍰</span>
+                <span class="relative z-10 text-lg">Sobremesas</span>
+                <div class="absolute -top-2 -right-2 w-4 h-4 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse"></div>
+            </button>
+            
+            <button onclick="openYouTube()" class="modern-nav-btn group relative bg-white hover:bg-gradient-to-r hover:from-red-600 hover:to-red-700 text-gray-800 hover:text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-500 flex items-center justify-center gap-3 border-2 border-red-200 hover:border-transparent overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <svg class="relative z-10 w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                <span class="relative z-10 text-lg">Kids ao Vivo</span>
+                <div class="absolute -top-2 -right-2 w-4 h-4 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse"></div>
             </button>
         </div>
     </div>
@@ -306,7 +326,32 @@
                 <!-- Pratos executivos will be populated by JavaScript -->
             </div>
         </div>
+
+        <!-- Sobremesas Section -->
+        <div id="sobremesas" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-left border-b-4 border-red-500 pb-4" style="font-family: 'Mediapro', sans-serif;">
+                Sobremesas
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sobremesasGrid">
+                <!-- Sobremesas will be populated by JavaScript -->
+            </div>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="border-t border-gray-700 pt-6">
+                <p class="text-gray-400 text-sm">
+                    © 2025 Todos os direitos reservados | Criado por 
+                    <a href="https://instagram.com/zerotofameoficial" target="_blank" rel="noopener noreferrer" class="text-red-400 hover:text-red-300 font-semibold transition-colors">
+                        @zerotofameoficial
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         let menuItems = [
@@ -430,14 +475,7 @@
                 imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpn4qEDPVB-xjJAYw8-VTWe0Iu_zC7PEchdHyLoN-Wgo4wGzty7PKluFAA7FWYwtOHv6oAgkimXwEdwiRZzOCcknmog5F3ElkfwyBCr8AnlI5iKw8FGNk2LbFlUXCCfsKXcI_Nqh86OveUFI1-qOnKUd9VU9dFTkwMbWPEMP24ZOpSZuF1E1ZO1kZQ2Mvy/s1434/IMG_0582.jpeg",
                 category: "entradas"
             },
-            {
-                name: "Torresminho",
-                price: "19,90",
-                description: "Delicioso torresminho crocante tradicional.",
-                image: "🥓",
-                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrhyKER5egYGhdp4SCZ5Kg7SZnkmFBSPn7wdiEH_8uey_mm1pwhEmHu_wHD9CeRqWEVEEyngPD9Olh1z7GcpOY5PWAHh5d8r4alO8isd_l7pjjXBYRgiGrrpiqYJjksWpVvFnjhRBrDal9McOqoKQOK6KCQGbM1k00vZKKlnchSDek6e-LiTRkC6KfcuiZ/w1684-h1069-p-k-no-nu/IMG_0584.jpeg",
-                category: "entradas"
-            },
+
             {
                 name: "Camarão João Pessoa",
                 price: "149,90",
@@ -447,7 +485,7 @@
                 category: "pratos-principais"
             },
             {
-                name: "Filé à Parmegiana",
+                name: "Filé à Parmegiana dupla",
                 price: "129,90",
                 description: "Tradicional filé empanado servido com cama de molho de tomate italiano e gratin de mussarela, servido com massa (grano duro).",
                 image: "🍝",
@@ -487,7 +525,7 @@
                 category: "executivos"
             },
             {
-                name: "Boi Bêbê",
+                name: "Boi Bêbo",
                 price: "46,90",
                 description: "Costela bovina marinada na cerveja preta e ervas assada levemente ao vapor e servida com nosso delicioso arroz de jerimum e cebolinho.",
                 image: "🍺",
@@ -503,7 +541,7 @@
                 category: "executivos"
             },
             {
-                name: "Parmegiana",
+                name: "Parmegiana de carne",
                 price: "59,90",
                 description: "Filé empanado com cama de molho de tomate italiano e gratin de mussarela, servido com massa italiana.",
                 image: "🍝",
@@ -511,9 +549,9 @@
                 category: "executivos"
             },
             {
-                name: "Baió do 4",
+                name: "Baião de 4",
                 price: "49,90",
-                description: "Baió de feijão verde puxado com carne de sol, queijo coalho, charque, torresmo e servido com couve frito.",
+                description: "Baião de feijão verde puxado com carne de sol, queijo coalho, charque, torresmo e servido com couve frito.",
                 image: "🫘",
                 imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnIq8A0EF0Ed0PzYPn0Xn1SW1VQitEE06ZqkORvRukgmNbrJAObMieff_olxvjWCOyl1cdN-_DThuB3y0cDPBmyO4OxPe8Jzbw_arskmOPMbNBRaeCcQVP_QXKL4ILqI3bV5_271vLWVbpNDJE0z9kQtiX2Z2ViCR5nvFcYOlmXFCNzXy_njqKR9XK0g5C/s3888/1735_Thiago_Ferreira_Fotografia.jpg",
                 category: "executivos"
@@ -535,10 +573,10 @@
                 category: "executivos"
             },
             {
-                name: "Parmegiana Trinchada",
+                name: "Parmegiana de Frango Trinchada",
                 price: "34,90",
-                description: "Filé mignon trinchado com molho de tomate italiano e gratinado de queijo mussarela.",
-                image: "🥩",
+                description: "Filé de frango trinchado com molho de tomate italiano e gratinado de queijo mussarela.",
+                image: "🐔",
                 imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEiF6I3BDBOJS8w_F1YR2io8T37CXODc9vcAEJMn2zQgKVfbb5Knw3XeqpieM3TOAl-FQVMR8Kf-sG9YwC-MmkjhbZTOOmhfMD1wlFpQTJdpGqnWLmrLmMMsUk-UWVV1571Ne-wBtOZ1fD0f8Gc8KyWyapZURWW-Vz4ykAfjZkq3KVz3ClbZ_W2gleoRsA_Y",
                 category: "executivos"
             },
@@ -565,6 +603,46 @@
                 image: "🐔",
                 imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEgkzUEIxBh2VQMEHZGKRgPrORdAII9wAp_tW-pRFphk4avURiZMyZoKLy3eyglRyKtte_HFqlEXksQfDsPavG11bIbeyEgTSg7Omam5otkM7AH6CrGAgp6y-VTe_LZ8IBfMKY9FFNyVC80wuvwsk72E8lyH214zqpds3WpArIKcMa4Ab6UdSNFfheivWJgS",
                 category: "executivos"
+            },
+            {
+                name: "Dirmantelo de Goiabada",
+                price: "32,90",
+                description: "Brûlée de creme de queijo de manteiga com calda de goiabada, crumble de biscoito e castanha de caju.",
+                image: "🍮",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQP63-CilGvc5sR03eAHyC_jY8qSio8KO3myjCjCDogbj2VSQ4RIu4-Bx0n0k1NoGzF93sNa2hebTCLlv7wGhbOxbmA4JOmpAA9fgMXEEyxvNZj0yOyWxpRODEQvy-3wRlWUN84iqxSCtrxKmavhiaVOhIqTmPwaQ7MeBiaa7PUj5BPyzJXq5bSeCkv7nh/s5628/2350_Thiago_Ferreira_Fotografia.jpg",
+                category: "sobremesas"
+            },
+            {
+                name: "Pudim Matuto",
+                price: "19,90",
+                description: "Nossa tradicional receita de pudim feito com leite de coco e calda de rapadura.",
+                image: "🍰",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjvN6Igv_vN-9ZL0ct7rHhI8FP_LRC-8Br2SUxw44WLFW42sua_2Ic2K-Kfh-rlBsBREqB3jcNSK1xP1ahOCGW0-gLxNo1Mo8MZIQdIeLtABBIu-tiQG7m1yr7PfrzjucggWXnLebTWqzf3IDEySNSKjMdXEIQSiTjwfse19yeWjb6k354R_LHLsD1yohXM/s6240/2579_Thiago_Ferreira_Fotografia.jpg",
+                category: "sobremesas"
+            },
+            {
+                name: "Bagaceira de Chocolate",
+                price: "32,90",
+                description: "Gran Gateau de chocolate com picolé crocante.",
+                image: "🍫",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_wYresLuUGumZHiNmj2VCk-SCBI7g3ASxsVU34QeF66eyV59u-jmL1bPVyiIzJ9TzP4eJjPqBNgyakc0JAI1OlAjHCUTCyds_42EzryD_Eqo1awBm4_dWELSRsGNoBd1lEMD-lJBJkip1WdqniSsKXkoSYRCLvl5JNgT2ZZSTrsKgnuE5vy6pDHXjVBup/s6240/1952_Thiago_Ferreira_Fotografia.jpg",
+                category: "sobremesas"
+            },
+            {
+                name: "Cocada Quente",
+                price: "34,90",
+                description: "Cocada cremosa assada ao forno com brûlée e sorvete de creme.",
+                image: "🥥",
+                imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpX75QJLs-Bq7JoswISnWqYvcTaBbLqTGyW7zbmbGuG8wtvrnFD9Z-QeAD8SOIFHYKBxePixp463qyL6mueCWMgjLN5dGcgEq0HvLA7L8c1hYrGkGq88TakacSrK1nd2BgqthqJr7zytNi3nF8ThtnsVtU1jgbibIpV9kVoDVgKpPbDV-AeX846fCXB-Uy/s1600/b1da8d55-adec-43ff-b2fb-1afedb34ab33.jfif",
+                category: "sobremesas"
+            },
+            {
+                name: "Surpresa de Morango",
+                price: "34,90",
+                description: "Creme baunilha, sorvete creme e geleia de morango.",
+                image: "🍓",
+                imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEgcPI8ajBEuC5wFGqVQsrrZK0iDjnvj645C5jG6D5sB78GQdnMXT7SKbtZPEJrkYKGTxLl45gzU0Jgu5WZWXasAUcMYivAosIqYhXFsSYerwUIJZg2YPB75o-e9q-VQ1B97Twt9mZo5yP4JkW50XJ1BFwL75OGjrjCa0SiudZPzEI9U1MKVtTHX3NgV4hl_",
+                category: "sobremesas"
             }
         ];
 
@@ -619,6 +697,18 @@
             const message = `Olá! Gostaria de pedir ${dishName}`;
             const encodedMessage = encodeURIComponent(message);
             const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // YouTube function
+        function openYouTube() {
+            const url = 'https://www.youtube.com/@restauranteinvo';
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // Vinhos function
+        function openVinhos() {
+            const url = 'https://zerotofamesites.github.io/vinhoinvo/';
             window.open(url, '_blank', 'noopener,noreferrer');
         }
 
@@ -678,11 +768,13 @@
             const entradasGrid = document.getElementById('entradasGrid');
             const pratosGrid = document.getElementById('pratosGrid');
             const executivosGrid = document.getElementById('executivosGrid');
+            const sobremesasGrid = document.getElementById('sobremesasGrid');
             
             // Filter items by category
             const entradas = menuItems.filter(item => item.category === 'entradas');
             const pratos = menuItems.filter(item => item.category === 'pratos-principais');
             const executivos = menuItems.filter(item => item.category === 'executivos');
+            const sobremesas = menuItems.filter(item => item.category === 'sobremesas');
             
             // Render entradas
             const entradasFragment = document.createDocumentFragment();
@@ -710,6 +802,15 @@
                 executivosFragment.appendChild(executivosDiv.firstChild);
             }
             executivosGrid.appendChild(executivosFragment);
+            
+            // Render sobremesas
+            const sobremesasFragment = document.createDocumentFragment();
+            const sobremesasDiv = document.createElement('div');
+            sobremesasDiv.innerHTML = sobremesas.map(item => createDishCard(item)).join('');
+            while (sobremesasDiv.firstChild) {
+                sobremesasFragment.appendChild(sobremesasDiv.firstChild);
+            }
+            sobremesasGrid.appendChild(sobremesasFragment);
             
             // Initialize lazy loading after render
             setTimeout(initLazyLoading, 100);
@@ -788,5 +889,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c35b24650f12fd',t:'MTc1NzM4NTk5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ca052b336a12fd',t:'MTc1NzQ1NTg3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
