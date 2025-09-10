@@ -135,7 +135,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
-        .slide-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide-1 { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
         .slide-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
         .slide-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
         .slide-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
@@ -147,6 +147,62 @@
         
         .text-shadow-md {
             text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 10000;
+            pointer-events: none;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .celebration-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 10001;
+            animation: celebration-bounce 2s ease-out forwards;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        @keyframes celebration-bounce {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+            70% {
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -503,7 +559,7 @@
             {
                 name: "Filé de Seu Pedro",
                 price: "189,00",
-                description: "Medalhões de filé mignon selados e flambados servidos com creme de gorgonzola. Acompanha: Arroz pimentone.",
+                description: "Medalhões de filé mignon selados e flambados servidos com creme de gorgonzola. Acompanha: Arroz à Piemontese.",
                 image: "🥩",
                 imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrTFmhbGuscTa1SrjYXr-Sqn2lqeW7NHCOOafVyTRF1JBarOGLmNUQ12WQRWV8q8lGUuola-yWv9_ROoBWfRpdODSUEFSJdX9G9xvto433Qhz8C1sdKVIEh5jxo7l8oFBfND5LCQolDh4OaaYOn_WibFQGIfvFD9VMpzUQaqj31mMQaKNbF0WN_1g85MeQ/s1462/IMG_0586.jpeg",
                 category: "pratos-principais"
@@ -541,7 +597,7 @@
                 category: "executivos"
             },
             {
-                name: "Parmegiana de carne",
+                name: "Filé à Parmegiana",
                 price: "59,90",
                 description: "Filé empanado com cama de molho de tomate italiano e gratin de mussarela, servido com massa italiana.",
                 image: "🍝",
@@ -565,7 +621,7 @@
                 category: "executivos"
             },
             {
-                name: "Parmegiana de Frango",
+                name: "Frango à Parmegiana",
                 price: "34,90",
                 description: "Filé de frango empanado com cama de molho de tomate italiano e gratinado de mussarela servido com massa italiana.",
                 image: "🐔",
@@ -573,7 +629,7 @@
                 category: "executivos"
             },
             {
-                name: "Parmegiana de Frango Trinchada",
+                name: "Frango à Parmegiana Trinchada",
                 price: "34,90",
                 description: "Filé de frango trinchado com molho de tomate italiano e gratinado de queijo mussarela.",
                 image: "🐔",
@@ -712,8 +768,49 @@
             window.open(url, '_blank', 'noopener,noreferrer');
         }
 
+        // Celebration effect function
+        function createCelebration() {
+            // Create confetti
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 4000);
+                }, i * 50);
+            }
+            
+            // Create celebration message
+            const message = document.createElement('div');
+            message.className = 'celebration-message';
+            message.textContent = '🎉 Boa escolha! 🎉';
+            document.body.appendChild(message);
+            
+            // Remove message after animation
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 2000);
+        }
+
         // Modal functions
         function openModal(imageUrl, dishName) {
+            // Trigger celebration effect
+            createCelebration();
+            
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
             modal.classList.add('show');
@@ -889,5 +986,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ce2109329af632',t:'MTc1NzQ5ODk1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97cfb57ca376f632',t:'MTc1NzUxNTUyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
