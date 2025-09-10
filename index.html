@@ -64,55 +64,107 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
         
-        .neon-border {
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff0000, #ff3333, #ff6666, #ff0000);
-            background-size: 400% 400%;
-            border-radius: 14px;
-            z-index: 1;
-            animation: neonGlow 2s ease-in-out infinite;
-            opacity: 0.8;
+        .pulse-btn {
+            animation: pulse 1.5s infinite, glow 2s infinite alternate, shake 3s infinite;
+            background: linear-gradient(45deg, #ff0000, #ff6b00, #ffff00, #ff0000) !important;
+            background-size: 400% 400% !important;
+            animation: pulse 1.5s infinite, glow 2s infinite alternate, shake 3s infinite, gradient 2s ease infinite !important;
+            border: 3px solid #ffff00 !important;
+            position: relative;
+            overflow: hidden;
         }
         
-        .nav-btn::before {
-            content: '';
+        .pulse-btn::before {
+            content: '🔥';
             position: absolute;
-            top: -1px;
-            left: -1px;
-            right: -1px;
-            bottom: -1px;
-            background: linear-gradient(45deg, #ff0000, #ff3333, #ff6666, #ff0000);
-            background-size: 400% 400%;
-            border-radius: 13px;
-            z-index: 0;
-            animation: neonRotate 3s linear infinite;
-            opacity: 0.6;
-            filter: blur(1px);
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            animation: fire 1s infinite;
         }
         
-        @keyframes neonGlow {
-            0%, 100% {
-                background-position: 0% 50%;
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.6), 0 0 60px rgba(255, 0, 0, 0.4);
+        .pulse-btn::after {
+            content: '🔥';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            animation: fire 1s infinite reverse;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.8);
             }
             50% {
-                background-position: 100% 50%;
-                box-shadow: 0 0 30px rgba(255, 51, 51, 0.9), 0 0 50px rgba(255, 51, 51, 0.7), 0 0 70px rgba(255, 51, 51, 0.5);
+                transform: scale(1.1);
+                box-shadow: 0 0 0 15px rgba(255, 215, 0, 0.3);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
             }
         }
         
-        @keyframes neonRotate {
+        @keyframes glow {
             0% {
-                background-position: 0% 50%;
+                box-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000;
             }
             100% {
-                background-position: 400% 50%;
+                box-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00, 0 0 30px #ffff00, 0 0 40px #ffff00;
             }
         }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) scale(1); }
+            10% { transform: translateX(-2px) scale(1.02); }
+            20% { transform: translateX(2px) scale(1.02); }
+            30% { transform: translateX(-2px) scale(1.02); }
+            40% { transform: translateX(2px) scale(1.02); }
+            50% { transform: translateX(0) scale(1.05); }
+            60% { transform: translateX(2px) scale(1.02); }
+            70% { transform: translateX(-2px) scale(1.02); }
+            80% { transform: translateX(2px) scale(1.02); }
+            90% { transform: translateX(-2px) scale(1.02); }
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes fire {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-60%) scale(1.2); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            max-width: 90%;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+
         
         .modal {
             display: none;
@@ -310,24 +362,20 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Navigation Buttons -->
         <div class="flex justify-center gap-2 sm:gap-4 mb-12 px-2">
-            <button onclick="scrollToSection('entradas')" class="nav-btn bg-white hover:bg-red-500 text-white hover:text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center border-2 border-red-200 hover:border-transparent min-w-0 flex-1 max-w-[120px] sm:max-w-none relative overflow-hidden">
-                <div class="neon-border"></div>
-                <span class="text-xs sm:text-sm font-semibold relative z-10">Entradas</span>
+            <button onclick="scrollToSection('entradas')" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+                <span class="text-xs sm:text-sm font-semibold">Entradas</span>
             </button>
             
-            <button onclick="openVinhos()" class="nav-btn bg-white hover:bg-red-500 text-white hover:text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center border-2 border-red-200 hover:border-transparent min-w-0 flex-1 max-w-[120px] sm:max-w-none relative overflow-hidden">
-                <div class="neon-border"></div>
-                <span class="text-xs sm:text-sm font-semibold relative z-10">Vinhos</span>
+            <button onclick="openVinhos()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+                <span class="text-xs sm:text-sm font-semibold">Vinhos</span>
             </button>
             
-            <button onclick="scrollToSection('sobremesas')" class="nav-btn bg-white hover:bg-red-500 text-white hover:text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center border-2 border-red-200 hover:border-transparent min-w-0 flex-1 max-w-[120px] sm:max-w-none relative overflow-hidden">
-                <div class="neon-border"></div>
-                <span class="text-xs sm:text-sm font-semibold relative z-10">Sobremesas</span>
+            <button onclick="showPromotion()" class="nav-btn pulse-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+                <span class="text-xs sm:text-sm font-semibold">Promoção</span>
             </button>
             
-            <button onclick="openBebidas()" class="nav-btn bg-white hover:bg-red-600 text-white hover:text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center border-2 border-red-200 hover:border-transparent min-w-0 flex-1 max-w-[120px] sm:max-w-none relative overflow-hidden">
-                <div class="neon-border"></div>
-                <span class="text-xs sm:text-sm font-semibold relative z-10">Bebidas</span>
+            <button onclick="openBebidas()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+                <span class="text-xs sm:text-sm font-semibold">Bebidas</span>
             </button>
         </div>
     </div>
@@ -336,6 +384,11 @@
     <div id="imageModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <img class="modal-content" id="modalImage" alt="Imagem ampliada">
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        🎉 Deixe seu feedback e ganhe 5% de desconto na sua conta!
     </div>
 
     <!-- Menu Container -->
@@ -373,16 +426,7 @@
             </div>
         </div>
 
-        <!-- Sobremesas Section -->
-        <div id="sobremesas" class="mb-12">
-            <h2 class="section-title text-3xl font-bold text-gray-800 mb-8 text-left pb-4" style="font-family: 'Mediapro', sans-serif;">
-                Sobremesas
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sobremesasGrid">
-                <!-- Sobremesas will be populated by JavaScript -->
-            </div>
-        </div>
+
     </div>
 
     <!-- Footer -->
@@ -758,6 +802,20 @@
             window.open(url, '_blank', 'noopener,noreferrer');
         }
 
+        // Promoção function
+        function showPromotion() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            // Hide notification after 3 seconds and redirect
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    window.open('https://docs.google.com/forms/d/e/1FAIpQLSeg5ADar8dvLSmnqkUYAtObrov8U1QubpI_hdoXfZW-v57xlw/viewform?pli=1', '_blank', 'noopener,noreferrer');
+                }, 300);
+            }, 3000);
+        }
+
 
 
         // Modal functions
@@ -816,13 +874,11 @@
             const entradasGrid = document.getElementById('entradasGrid');
             const pratosGrid = document.getElementById('pratosGrid');
             const executivosGrid = document.getElementById('executivosGrid');
-            const sobremesasGrid = document.getElementById('sobremesasGrid');
             
             // Filter items by category
             const entradas = menuItems.filter(item => item.category === 'entradas');
             const pratos = menuItems.filter(item => item.category === 'pratos-principais');
             const executivos = menuItems.filter(item => item.category === 'executivos');
-            const sobremesas = menuItems.filter(item => item.category === 'sobremesas');
             
             // Render entradas
             const entradasFragment = document.createDocumentFragment();
@@ -851,14 +907,7 @@
             }
             executivosGrid.appendChild(executivosFragment);
             
-            // Render sobremesas
-            const sobremesasFragment = document.createDocumentFragment();
-            const sobremesasDiv = document.createElement('div');
-            sobremesasDiv.innerHTML = sobremesas.map(item => createDishCard(item)).join('');
-            while (sobremesasDiv.firstChild) {
-                sobremesasFragment.appendChild(sobremesasDiv.firstChild);
-            }
-            sobremesasGrid.appendChild(sobremesasFragment);
+
             
             // Initialize lazy loading after render
             setTimeout(initLazyLoading, 100);
@@ -939,5 +988,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97d17205c1fff632',t:'MTc1NzUzMzczMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97d24169b422f632',t:'MTc1NzU0MjIyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
