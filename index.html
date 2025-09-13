@@ -379,6 +379,33 @@
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
+        <!-- Search Bar -->
+        <div class="max-w-md mx-auto mb-8">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Pesquisar pratos..." 
+                    class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors text-gray-700 bg-white shadow-lg"
+                    oninput="searchDishes()"
+                >
+                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <button 
+                    id="clearSearch" 
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors hidden"
+                    onclick="clearSearch()"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
         <!-- Navigation Buttons -->
         <div class="flex justify-center gap-2 sm:gap-4 mb-12 px-2">
             <button onclick="scrollToSection('entradas')" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
@@ -414,6 +441,21 @@
 
     <!-- Menu Container -->
     <div class="container mx-auto px-4 py-8">
+        <!-- Search Results Section -->
+        <div id="searchResults" class="mb-12 hidden">
+            <h2 class="section-title text-3xl font-bold text-gray-800 mb-8 text-left pb-4" style="font-family: 'Mediapro', sans-serif;">
+                Resultados da Pesquisa
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="searchGrid">
+                <!-- Search results will be populated by JavaScript -->
+            </div>
+            <div id="noResults" class="text-center py-12 hidden">
+                <div class="text-6xl mb-4">🔍</div>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhum prato encontrado</h3>
+                <p class="text-gray-500">Tente pesquisar com outras palavras-chave</p>
+            </div>
+        </div>
+
         <!-- Entradas Section -->
         <div id="entradas" class="mb-12">
             <h2 class="section-title text-3xl font-bold text-gray-800 mb-8 text-left pb-4" style="font-family: 'Mediapro', sans-serif;">
@@ -646,7 +688,7 @@
             {
                 name: "Cumêzim de Vó",
                 price: "42,90",
-                description: "Arroz vermelho cozido ao leite, servido com chips de macaxeira crocante e carne de sol desfiada.",
+                description: "Arroz vermelho cozido ao leite, servido com chips de macaxeira crocante e carne de sol desfiçada.",
                 image: "🍚",
                 imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqNdELCwu7nu4Cvdw2VWFolczTXNI3nT-ZGgNlsRzCXcgUUztAdH-HQawikC_w8uDzG5L4MvgGxvVc0VKevB2FKYjmXVhObQ-TqYGwE5sZVvA52PP82XwM54TyQfDkLevkWqg2DWE84R4USf4jp5Qklmrpb_NfJehy0KnauCtxaAtQy6oi5c2MEGimYFyQ/s1320/IMG_0592.jpeg",
                 category: "executivos"
@@ -935,8 +977,78 @@
             setTimeout(initLazyLoading, 100);
         }
 
+        // Search functionality
+        function searchDishes() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const clearButton = document.getElementById('clearSearch');
+            const searchResults = document.getElementById('searchResults');
+            const searchGrid = document.getElementById('searchGrid');
+            const noResults = document.getElementById('noResults');
+            const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos');
+            
+            // Show/hide clear button
+            if (searchTerm.length > 0) {
+                clearButton.classList.remove('hidden');
+            } else {
+                clearButton.classList.add('hidden');
+            }
+            
+            if (searchTerm.length === 0) {
+                // Show all sections, hide search results
+                searchResults.classList.add('hidden');
+                menuSections.forEach(section => section.classList.remove('hidden'));
+                return;
+            }
+            
+            // Filter menu items based on search term
+            const filteredItems = menuItems.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) ||
+                item.description.toLowerCase().includes(searchTerm) ||
+                item.category.toLowerCase().includes(searchTerm)
+            );
+            
+            // Hide all menu sections
+            menuSections.forEach(section => section.classList.add('hidden'));
+            
+            // Show search results section
+            searchResults.classList.remove('hidden');
+            
+            if (filteredItems.length > 0) {
+                // Display filtered results
+                searchGrid.innerHTML = filteredItems.map(item => createDishCard(item)).join('');
+                searchGrid.classList.remove('hidden');
+                noResults.classList.add('hidden');
+                
+                // Initialize lazy loading for new images
+                setTimeout(initLazyLoading, 100);
+            } else {
+                // Show no results message
+                searchGrid.classList.add('hidden');
+                noResults.classList.remove('hidden');
+            }
+        }
+        
+        function clearSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const clearButton = document.getElementById('clearSearch');
+            const searchResults = document.getElementById('searchResults');
+            const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos');
+            
+            searchInput.value = '';
+            clearButton.classList.add('hidden');
+            searchResults.classList.add('hidden');
+            menuSections.forEach(section => section.classList.remove('hidden'));
+            
+            // Focus back to search input
+            searchInput.focus();
+        }
+
         // Smooth scroll to section function
         function scrollToSection(sectionId) {
+            // Clear search when navigating to sections
+            clearSearch();
+            
             const section = document.getElementById(sectionId);
             if (section) {
                 const headerHeight = 100; // Account for fixed header space
@@ -1010,5 +1122,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97d38d36d2b8f634',t:'MTc1NzU1NTgxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ea77566418f612',t:'MTc1Nzc5NjA5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
