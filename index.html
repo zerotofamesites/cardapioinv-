@@ -408,19 +408,23 @@
 
         <!-- Navigation Buttons -->
         <div class="flex justify-center gap-2 sm:gap-4 mb-12 px-2">
-            <button onclick="scrollToSection('entradas')" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+            <button onclick="scrollToSection('entradas')" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
                 <span class="text-xs sm:text-sm font-semibold">Entradas</span>
             </button>
             
-            <button onclick="openVinhos()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+            <button onclick="scrollToSection('sobremesas')" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
+                <span class="text-xs sm:text-sm font-semibold">Sobremesas</span>
+            </button>
+            
+            <button onclick="openVinhos()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
                 <span class="text-xs sm:text-sm font-semibold">Vinhos</span>
             </button>
             
-            <button onclick="showPromotion()" class="nav-btn pulse-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+            <button onclick="showPromotion()" class="nav-btn pulse-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
                 <span class="text-xs sm:text-sm font-semibold">Promoção</span>
             </button>
             
-            <button onclick="openBebidas()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[120px] sm:max-w-none">
+            <button onclick="openBebidas()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
                 <span class="text-xs sm:text-sm font-semibold">Bebidas</span>
             </button>
         </div>
@@ -489,6 +493,16 @@
             </div>
         </div>
 
+        <!-- Sobremesas Section -->
+        <div id="sobremesas" class="mb-12">
+            <h2 class="section-title text-3xl font-bold text-gray-800 mb-8 text-left pb-4" style="font-family: 'Mediapro', sans-serif;">
+                Sobremesas
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sobremesasGrid">
+                <!-- Sobremesas will be populated by JavaScript -->
+            </div>
+        </div>
 
     </div>
 
@@ -946,11 +960,13 @@
             const entradasGrid = document.getElementById('entradasGrid');
             const pratosGrid = document.getElementById('pratosGrid');
             const executivosGrid = document.getElementById('executivosGrid');
+            const sobremesasGrid = document.getElementById('sobremesasGrid');
             
             // Filter items by category
             const entradas = menuItems.filter(item => item.category === 'entradas');
             const pratos = menuItems.filter(item => item.category === 'pratos-principais');
             const executivos = menuItems.filter(item => item.category === 'executivos');
+            const sobremesas = menuItems.filter(item => item.category === 'sobremesas');
             
             // Render entradas
             const entradasFragment = document.createDocumentFragment();
@@ -979,7 +995,14 @@
             }
             executivosGrid.appendChild(executivosFragment);
             
-
+            // Render sobremesas
+            const sobremesasFragment = document.createDocumentFragment();
+            const sobremesasDiv = document.createElement('div');
+            sobremesasDiv.innerHTML = sobremesas.map(item => createDishCard(item)).join('');
+            while (sobremesasDiv.firstChild) {
+                sobremesasFragment.appendChild(sobremesasDiv.firstChild);
+            }
+            sobremesasGrid.appendChild(sobremesasFragment);
             
             // Initialize lazy loading after render
             setTimeout(initLazyLoading, 100);
@@ -993,7 +1016,7 @@
             const searchResults = document.getElementById('searchResults');
             const searchGrid = document.getElementById('searchGrid');
             const noResults = document.getElementById('noResults');
-            const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos');
+            const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos, #sobremesas');
             
             // Show/hide clear button
             if (searchTerm.length > 0) {
@@ -1041,7 +1064,7 @@
             const searchInput = document.getElementById('searchInput');
             const clearButton = document.getElementById('clearSearch');
             const searchResults = document.getElementById('searchResults');
-            const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos');
+            const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos, #sobremesas');
             
             searchInput.value = '';
             clearButton.classList.add('hidden');
@@ -1130,5 +1153,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eb310ec49df61f',t:'MTc1NzgwMzcwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eb37dfd65df622',t:'MTc1NzgwMzk4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
