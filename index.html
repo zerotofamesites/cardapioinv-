@@ -142,76 +142,7 @@
             50% { transform: translateY(-60%) scale(1.2); }
         }
         
-        .premium-dish {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .premium-dish::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff0000, #ff6b00, #ffff00, #ff0000, #ff6b00, #ffff00);
-            background-size: 400% 400%;
-            border-radius: 18px;
-            z-index: -1;
-            animation: premiumGlow 3s linear infinite;
-            filter: blur(1px);
-        }
-        
-        .premium-dish::after {
-            content: '👑 PREMIUM';
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: linear-gradient(45deg, #ff0000, #ffff00);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(0,0,0,0.8);
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-            z-index: 10;
-            animation: premiumPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes premiumGlow {
-            0% {
-                background-position: 0% 50%;
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.6), 0 0 60px rgba(255, 0, 0, 0.4);
-            }
-            25% {
-                background-position: 100% 50%;
-                box-shadow: 0 0 20px rgba(255, 107, 0, 0.8), 0 0 40px rgba(255, 107, 0, 0.6), 0 0 60px rgba(255, 107, 0, 0.4);
-            }
-            50% {
-                background-position: 100% 100%;
-                box-shadow: 0 0 20px rgba(255, 255, 0, 0.8), 0 0 40px rgba(255, 255, 0, 0.6), 0 0 60px rgba(255, 255, 0, 0.4);
-            }
-            75% {
-                background-position: 0% 100%;
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.6), 0 0 60px rgba(255, 0, 0, 0.4);
-            }
-            100% {
-                background-position: 0% 50%;
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.6), 0 0 60px rgba(255, 0, 0, 0.4);
-            }
-        }
-        
-        @keyframes premiumPulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.9;
-            }
-        }
+
         
         .notification {
             position: fixed;
@@ -483,8 +414,8 @@
                 <span class="text-xs sm:text-sm font-semibold">Entradas</span>
             </button>
             
-            <button onclick="scrollToSection('sobremesas')" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
-                <span class="text-xs sm:text-sm font-semibold">Sobremesas</span>
+            <button onclick="showPrecoBaixo()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
+                <span class="text-xs sm:text-sm font-semibold">Preço baixo</span>
             </button>
             
             <button onclick="openVinhos()" class="nav-btn bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-3 sm:px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center min-w-0 flex-1 max-w-[100px] sm:max-w-none">
@@ -528,6 +459,16 @@
                 <div class="text-6xl mb-4">🔍</div>
                 <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhum prato encontrado</h3>
                 <p class="text-gray-500">Tente pesquisar com outras palavras-chave</p>
+            </div>
+        </div>
+
+        <!-- Preço Baixo Section -->
+        <div id="preco-baixo" class="mb-12 hidden">
+            <h2 class="section-title text-3xl font-bold text-gray-800 mb-8 text-left pb-4" style="font-family: 'Mediapro', sans-serif;">
+                💰 Preços Baixos (R$ 20 - R$ 50)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="precoBaixoGrid">
+                <!-- Preço baixo items will be populated by JavaScript -->
             </div>
         </div>
 
@@ -921,13 +862,8 @@
                      <span class="text-6xl" role="img" aria-label="${item.name}">${item.image}</span>
                  </div>`;
 
-            // Check if price is above 50 reais
-            const price = parseFloat(item.price.replace(',', '.'));
-            const isPremium = price >= 50;
-            const premiumClass = isPremium ? 'premium-dish' : '';
-
             return `
-                <article class="dish-card ${premiumClass} bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100" itemscope itemtype="https://schema.org/MenuItem">
+                <article class="dish-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100" itemscope itemtype="https://schema.org/MenuItem">
                     <div class="relative">
                         ${imageContent}
                         <div class="price-tag absolute top-4 right-4 text-white px-3 py-1 rounded-full font-bold text-lg" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
@@ -973,6 +909,51 @@
         function openVinhos() {
             const url = 'https://zerotofamesites.github.io/vinhoinvo/';
             window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // Preço Baixo function
+        function showPrecoBaixo() {
+            // Clear search first
+            clearSearch();
+            
+            const precoBaixoSection = document.getElementById('preco-baixo');
+            const precoBaixoGrid = document.getElementById('precoBaixoGrid');
+            const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos, #sobremesas');
+            
+            // Hide all menu sections and preço baixo section
+            menuSections.forEach(section => section.classList.add('hidden'));
+            precoBaixoSection.classList.add('hidden');
+            
+            // Filter items by price range (20-50 reais)
+            const precoBaixoItems = menuItems.filter(item => {
+                const price = parseFloat(item.price.replace(',', '.'));
+                return price >= 20 && price <= 50;
+            });
+            
+            // Sort by price (lowest first)
+            precoBaixoItems.sort((a, b) => {
+                const priceA = parseFloat(a.price.replace(',', '.'));
+                const priceB = parseFloat(b.price.replace(',', '.'));
+                return priceA - priceB;
+            });
+            
+            // Render filtered items
+            precoBaixoGrid.innerHTML = precoBaixoItems.map(item => createDishCard(item)).join('');
+            
+            // Show preço baixo section
+            precoBaixoSection.classList.remove('hidden');
+            
+            // Initialize lazy loading for new images
+            setTimeout(initLazyLoading, 100);
+            
+            // Scroll to section
+            const headerHeight = 100;
+            const elementPosition = precoBaixoSection.offsetTop - headerHeight;
+            
+            window.scrollTo({
+                top: elementPosition,
+                behavior: 'smooth'
+            });
         }
 
         // Promoção function
@@ -1129,6 +1110,7 @@
             const searchResults = document.getElementById('searchResults');
             const searchGrid = document.getElementById('searchGrid');
             const noResults = document.getElementById('noResults');
+            const precoBaixoSection = document.getElementById('preco-baixo');
             const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos, #sobremesas');
             
             // Show/hide clear button
@@ -1141,6 +1123,7 @@
             if (searchTerm.length === 0) {
                 // Show all sections, hide search results
                 searchResults.classList.add('hidden');
+                precoBaixoSection.classList.add('hidden');
                 menuSections.forEach(section => section.classList.remove('hidden'));
                 return;
             }
@@ -1152,8 +1135,9 @@
                 item.category.toLowerCase().includes(searchTerm)
             );
             
-            // Hide all menu sections
+            // Hide all menu sections and preço baixo section
             menuSections.forEach(section => section.classList.add('hidden'));
+            precoBaixoSection.classList.add('hidden');
             
             // Show search results section
             searchResults.classList.remove('hidden');
@@ -1177,11 +1161,13 @@
             const searchInput = document.getElementById('searchInput');
             const clearButton = document.getElementById('clearSearch');
             const searchResults = document.getElementById('searchResults');
+            const precoBaixoSection = document.getElementById('preco-baixo');
             const menuSections = document.querySelectorAll('#entradas, #pratos-principais, #executivos, #sobremesas');
             
             searchInput.value = '';
             clearButton.classList.add('hidden');
             searchResults.classList.add('hidden');
+            precoBaixoSection.classList.add('hidden');
             menuSections.forEach(section => section.classList.remove('hidden'));
             
             // Focus back to search input
@@ -1291,5 +1277,5 @@
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eba8e8361cf623',t:'MTc1NzgwODYxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97c31a1df2cb12fd',t:'MTc1NzM4MzMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ebc6fef5004f82',t:'MTc1NzgwOTg0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
